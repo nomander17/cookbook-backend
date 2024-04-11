@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name="user")
@@ -21,13 +22,16 @@ public class User {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer userID;
 	
-	@Column(name="userName")
+	@Column(name="userName", nullable=false)
+	@NotNull
 	private String userName;
 	
-	@Column(name="email")
+	@NotNull
+	@Column(name="email", nullable=false)
 	private String email;
 	
-	@Column(name="password")
+	@NotNull
+	@Column(name="password", nullable=false)
 	private String password;
 	
 	@OneToMany(cascade = CascadeType.ALL)

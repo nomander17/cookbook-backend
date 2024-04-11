@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -45,7 +46,12 @@ public class Comment {
 	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime time;
 	
-	//json for content
+	@Column(name="text", length=1000,nullable=false)
+	private String text;
+	
+	@Lob
+	@Column(name="image", columnDefinition="BLOB")
+	private byte[] image;
 	
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinColumn(name="commentID")

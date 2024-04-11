@@ -28,7 +28,7 @@ public class Post {
 	
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="userID")
-	private Integer userID;
+	private User userID;
 	
 	@Column(name="time")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -58,7 +58,7 @@ public class Post {
 		this.postID = postID;
 	}
 
-	public Integer getUserID() {
+	public User getUserID() {
 		return userID;
 	}
 

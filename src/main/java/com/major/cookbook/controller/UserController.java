@@ -46,10 +46,10 @@ public class UserController {
   
 
   @PostMapping("/register")
-  public User addUser(@RequestBody User user)
+  /*public User addUser(@RequestBody User user)
   {
   	return this.userService.addUser(user);
-  }
+  }*/
   public ResponseEntity<String> postUserRegister(@RequestBody String entity) {
     // todo 
     JSONObject request = new JSONObject(entity);
@@ -57,6 +57,15 @@ public class UserController {
     // Register 
     response=request;
     // Generate unique token and store in DB?
+    String username=response.getString("username");
+    String email=response.getString("email");
+    String password=response.getString("password");
+    
+    User user = new User();
+    User.setUserName(username);
+    User.setPassword(password);
+    User.setEmail(email);
+    
     // Test for now
     response.put("token", "abcdxyz");
     response.put("success", true);

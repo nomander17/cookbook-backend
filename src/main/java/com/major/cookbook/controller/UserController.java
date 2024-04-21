@@ -46,11 +46,6 @@ public class UserController {
   
 
   @PostMapping("/register")
-  /*public User addUser(@RequestBody User user)
-  {
-  	return this.userService.addUser(user);
-  }*/
-
   public ResponseEntity<String> postUserRegister(@RequestBody String entity) {
     // todo 
     JSONObject request = new JSONObject(entity);
@@ -69,7 +64,7 @@ public class UserController {
     user.setPassword(password);
 
     User registeredUser = userService.addUser(user);
-
+    
     response.put("registeredUser", registeredUser);
     response.put("token", "abcdxyz");
     response.put("success", true);

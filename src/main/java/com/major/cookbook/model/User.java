@@ -22,12 +22,12 @@ public class User {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer userID;
 	
-	@Column(name="userName", nullable=false)
+	@Column(name="userName", nullable=false, unique=true)
 	@NotNull
 	private String userName;
 	
 	@NotNull
-	@Column(name="email", nullable=false)
+	@Column(name="email", nullable=false, unique=true)
 	private String email;
 	
 	@NotNull

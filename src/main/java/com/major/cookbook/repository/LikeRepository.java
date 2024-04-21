@@ -1,4 +1,4 @@
-package com.major.cookbook.service;
+package com.major.cookbook.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -50,6 +50,7 @@ public class UserController {
   {
   	return this.userService.addUser(user);
   }*/
+
   public ResponseEntity<String> postUserRegister(@RequestBody String entity) {
     // todo 
     JSONObject request = new JSONObject(entity);
@@ -62,11 +63,14 @@ public class UserController {
     String password=response.getString("password");
     
     User user = new User();
-    User.setUserName(username);
-    User.setPassword(password);
-    User.setEmail(email);
-    
-    // Test for now
+
+    user.setUserName(username);
+    user.setEmail(email);
+    user.setPassword(password);
+
+    User registeredUser = userService.addUser(user);
+
+    response.put("registeredUser", registeredUser);
     response.put("token", "abcdxyz");
     response.put("success", true);
     response.put("message", "Registration successful.");

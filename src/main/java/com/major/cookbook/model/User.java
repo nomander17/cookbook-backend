@@ -22,9 +22,9 @@ public class User {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer userID;
 	
-	@Column(name="userName", nullable=false, unique=true)
+	@Column(name="username", nullable=false, unique=true)
 	@NotNull
-	private String userName;
+	private String username;
 	
 	@NotNull
 	@Column(name="email", nullable=false, unique=true)
@@ -52,11 +52,11 @@ public class User {
 	public void setUserID(Integer userID) {
 		this.userID = userID;
 	}
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	public List<Comment> getComment() {
 		return comment;
@@ -80,10 +80,10 @@ public class User {
 	{
 		
 	}
-	public User(int userID, String userName, String email, String password) {
+	public User(int userID, String username, String email, String password) {
 		super();
 		this.userID = userID;
-		this.userName = userName;
+		this.username = username;
 		this.email = email;
 		this.password = password;
 	}
@@ -102,7 +102,7 @@ public class User {
 	}
 	@Override
 	public String toString() {
-		return "User [userID=" + userID + ", userName=" + userName + ", email=" + email + ", password=" + password + "]";
+		return "User [userID=" + userID + ", username=" + username + ", email=" + email + ", password=" + password + "]";
 	}
 }
 

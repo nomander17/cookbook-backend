@@ -1,10 +1,8 @@
 package com.major.cookbook.services;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.major.cookbook.repository.UserRepo;
 import com.major.cookbook.model.User;
 
@@ -24,13 +22,24 @@ public class UserServiceImp implements UserService {
 	}
 
 	@Override
-	public User getUser(int userId) {		
-		return userRepo.findById(userId).get();
+	public User getUserById(int userId) {
+		return userRepo.findById(userId).orElse(null);
 	}
 
 	@Override
-	public User updateUser(User user) {
-		userRepo.save(user);
+	public User updateUser(User updatedUser) {
+		userRepo.save(updatedUser);
+		return updatedUser;
+	}
+
+	@Override
+	public User deleteUser(int userID) {
+		User user = getUserById(userID);
+		userRepo.delete(user);
 		return user;
+	}
+	@Override
+	public User getUserByEmail(String email) {
+		return userRepo.findByEmail(email).orElse(null);
 	}
 }

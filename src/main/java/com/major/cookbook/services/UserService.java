@@ -5,11 +5,21 @@ import java.util.List;
 import com.major.cookbook.model.User;
 
 public interface UserService {
-		public User addUser(User user);
-		//Used to get a list of users returned
-		public List<User> getUsers();
-		//Used to get the info of a specific user
-		public User getUser(int userId);
-		//Used to update a user's info
-		public User updateUser(User user);		
+	// Add a user
+	public User addUser(User user);
+
+	// GET all users
+	public List<User> getUsers();
+
+	// GET specific user by ID
+	public User getUserById(int userId);
+
+	// GET specific user by email
+	public User getUserByEmail(String email);
+
+	// Update a particular user
+	public User updateUser(User user);
+
+	// Delete a particular user
+	public User deleteUser(int userID);
 }

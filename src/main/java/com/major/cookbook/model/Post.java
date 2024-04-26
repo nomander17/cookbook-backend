@@ -23,7 +23,7 @@ import jakarta.persistence.TemporalType;
 public class Post {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="postId")
+	@Column(name="postID")
 	private Integer postID;
 	
 	@ManyToOne(cascade=CascadeType.ALL)

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.major.cookbook.dto.UserDTO;
+import com.major.cookbook.model.Post;
 import com.major.cookbook.model.User;
 import com.major.cookbook.services.UserService;
 
@@ -22,14 +24,22 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> postUserLogin(@RequestBody User user) {
         return ResponseEntity.ok(user.toString());
-    }
+    } 
 
     @PostMapping("/register")
-    public ResponseEntity<String> postUserRegister(@RequestBody User newUser) {
-        User exisitingUser = userService.getUserByEmail(newUser.getEmail());
+    public ResponseEntity<String> postUserRegister(@RequestBody UserDTO userDTO) {
+        User exisitingUser = userService.getUserByEmail(userDTO.getEmail());
         if (exisitingUser != null) {
             return ResponseEntity.badRequest().body("Email already registered.");
+        }else {
+            User user = new User();
+            user.setUsername(userDTO.getUsername());
+            user.setEmail(userDTO.getEmail());
+            user.setPassword(userDTO.getPassword());
+            user.setIs_admin(false);
+            User newUser = this.userService.addUser(user);
+            return ResponseEntity.ok(newUser.toString());
         }
-        return ResponseEntity.ok(userService.addUser(newUser).toString());
+        
     }
 }

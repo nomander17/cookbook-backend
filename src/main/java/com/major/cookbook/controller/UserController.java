@@ -1,6 +1,8 @@
 package com.major.cookbook.controller;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import com.major.cookbook.dto.UserDTO;
 import com.major.cookbook.model.User;
 import com.major.cookbook.services.UserService;
 import java.util.List;
@@ -23,7 +25,7 @@ public class UserController {
 
   @Autowired
   private UserService userService;
-
+ 
   private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
   // Returns a specified user
@@ -51,15 +53,22 @@ public class UserController {
 
   // Update a specified user
   @PutMapping("/{userID}")
-  public ResponseEntity<Object> updateUser(@PathVariable String userID, @RequestBody User updatedUser) {
-    User user = this.userService.getUserById(Integer.parseInt(userID));
+  public ResponseEntity<Object> updateUser(@PathVariable String userID, @RequestBody UserDTO userDTO) {
+    User userExist = this.userService.getUserById(Integer.parseInt(userID));
     logger.debug("UserID : {}", userID);
-    logger.debug("User: {}", user);
-    if (user == null) {
+    logger.debug("User: {}", userExist);
+    if (userExist == null) {
       logger.warn("UserID {} not found", userID);
       return ResponseEntity.notFound().build();
-    } else {
-      return ResponseEntity.ok(this.userService.updateUser(updatedUser));
+    }else {
+        User user = new User();
+        user.setUserId(userDTO.getUserId());
+        user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+        user.setIs_admin(false);
+        User updatedUser = this.userService.updateUser(user);
+        return ResponseEntity.ok(updatedUser);
     }
   }
 

@@ -40,7 +40,7 @@ public class UserController {
   // Returns ALL registered users
   @GetMapping("/")
   public ResponseEntity<Object> getUsers() {
-    List<User> users = this.userService.getUsers();
+    List<User> users = this.userService.getUsersExceptUserId(1);
     if (users.isEmpty()) {
       return ResponseEntity.noContent().build();
     } else {

@@ -9,7 +9,7 @@ public interface UserService {
 	public User addUser(User user);
 
 	// GET all users
-	public List<User> getUsers();
+	public List<User> getUsersExceptUserId(int userId);
 
 	// GET specific user by ID
 	public User getUserById(int userId);

@@ -1,6 +1,8 @@
 package com.major.cookbook.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,9 +27,14 @@ public class UserServiceImp implements UserService {
 		userRepo.save(user);
 		return user;
 	}
+	
+	//Gets all Users except the Admin
 	@Override
-	public List<User> getUsers() {
-		return userRepo.findAll();
+	public List<User> getUsersExceptUserId(int userId) {
+		return userRepo.findAll()
+                .stream()
+                .filter(user -> !user.getUserId().equals(userId))
+                .collect(Collectors.toList());
 	}
 
 	@Override

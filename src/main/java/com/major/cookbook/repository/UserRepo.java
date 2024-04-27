@@ -5,6 +5,5 @@ import com.major.cookbook.model.User;
 
 public interface UserRepo extends JpaRepository<User, Integer> {
 
-    Optional<User> findByEmail(String email);
-
+    public Optional<User> findByEmail(String email);    
 }

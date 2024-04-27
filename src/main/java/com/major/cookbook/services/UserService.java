@@ -22,4 +22,7 @@ public interface UserService {
 
 	// Delete a particular user
 	public User deleteUser(int userID);
+	
+	//Create Admin if user table is empty
+	public User addAdmin();
 }

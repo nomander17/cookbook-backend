@@ -53,8 +53,42 @@ public class User {
     
     @ManyToMany
     private List<User> following = new ArrayList<>();
+    
+    @NotNull
+    @Column(name = "is_admin", nullable = false)
+    private boolean is_admin=false;
 
-    @Override
+    public List<User> getFollowers() {
+		return followers;
+	}
+
+
+	public void setFollowers(List<User> followers) {
+		this.followers = followers;
+	}
+
+
+	public List<User> getFollowing() {
+		return following;
+	}
+
+
+	public void setFollowing(List<User> following) {
+		this.following = following;
+	}
+
+
+	public boolean isIs_admin() {
+		return is_admin;
+	}
+
+
+	public void setIs_admin(boolean is_admin) {
+		this.is_admin = is_admin;
+	}
+
+
+	@Override
     public String toString() {
         return "User [userId=" + userId + ", username=" + username + ", email=" + email + ", password=" + password + "]";
     }

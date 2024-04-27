@@ -48,6 +48,7 @@ public class User {
     @JsonIgnore
     private List<Post> posts = new ArrayList<>();
     
+    @ManyToMany
     private List<User> followers = new ArrayList<>();
     
     @ManyToMany

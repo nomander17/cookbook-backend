@@ -3,15 +3,15 @@ package com.major.cookbook.dto;
 import java.time.LocalDateTime;
 
 public class PostDTO {
-    private int userID;
+    private int userId;
     private String text;
     private LocalDateTime time;
     private byte[] image;
-    public int getUserID() {
-        return userID;
+    public int getUserId() {
+        return userId;
     }
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
     public String getText() {
         return text;
@@ -34,7 +34,7 @@ public class PostDTO {
     public PostDTO() {
     }
     public PostDTO(int userID, String text, LocalDateTime time, byte[] image) {
-        this.userID = userID;
+        this.userId = userID;
         this.text = text;
         this.time = time;
         this.image = image;

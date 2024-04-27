@@ -2,7 +2,6 @@ package com.major.cookbook.model;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,72 +10,73 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name="likes")
+@Table(name = "likes")
 public class Like {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="likeID")
-	private Integer likeID;
-	
-	@ManyToOne
-	@JoinColumn(name = "postID")
-	private Post post;
-	
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="commentID")
-	private Comment commentID;
-	
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="userID")
-	private User userID;
-	
-	@Column(name="time")
-	@Temporal(TemporalType.TIMESTAMP)
-	private LocalDateTime time;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "like_id")
+    private Integer likeId;
 
-	public Integer getLikeID() {
-		return likeID;
-	}
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-	public void setLikeID(Integer likeID) {
-		this.likeID = likeID;
-	}
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 
-	public Post getPostID() {
-		return post;
-	}
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-	public void setPostID(Post postID) {
-		this.post = postID;
-	}
+    @Column(name = "time")
+    private LocalDateTime time;
 
-	public Comment getCommentID() {
-		return commentID;
-	}
+    public Integer getLikeId() {
+        return likeId;
+    }
 
-	public void setCommentID(Comment commentID) {
-		this.commentID = commentID;
-	}
+    public void setLikeId(Integer likeId) {
+        this.likeId = likeId;
+    }
 
-	public User getUserID() {
-		return userID;
-	}
+    public Post getPost() {
+        return post;
+    }
 
-	public void setUserID(User userID) {
-		this.userID = userID;
-	}
+    public void setPost(Post post) {
+        this.post = post;
+    }
 
-	public LocalDateTime getTime() {
-		return time;
-	}
+    public Comment getComment() {
+        return comment;
+    }
 
-	public void setTime(LocalDateTime time) {
-		this.time = time;
-	}
-		
-	
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
+
+    @Override
+    public String toString() {
+        return "Like [likeId=" + likeId + ", post=" + post + ", comment=" + comment + ", user=" + user +
+                ", time=" + time + "]";
+    }
 }

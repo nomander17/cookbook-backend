@@ -21,11 +21,11 @@ import jakarta.persistence.Table;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "postID")
-    private Integer postID;
+    @Column(name = "post_id")
+    private Integer postId;
 
     @ManyToOne
-    @JoinColumn(name = "userID")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "time")
@@ -44,75 +44,78 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-	public Integer getPostID() {
-		return postID;
-	}
+    public Integer getPostId() {
+        return postId;
+    }
 
-	public void setPostID(Integer postID) {
-		this.postID = postID;
-	}
+    public void setPostId(Integer postId) {
+        this.postId = postId;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public User getUser() {
+        return user;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	public LocalDateTime getTime() {
-		return time;
-	}
+    public LocalDateTime getTime() {
+        return time;
+    }
 
-	public void setTime(LocalDateTime time) {
-		this.time = time;
-	}
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	public byte[] getImage() {
-		return image;
-	}
+    public byte[] getImage() {
+        return image;
+    }
 
-	public void setImage(byte[] image) {
-		this.image = image;
-	}
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 
-	public List<Like> getLikes() {
-		return likes;
-	}
+    public List<Like> getLikes() {
+        return likes;
+    }
 
-	public void setLikes(List<Like> likes) {
-		this.likes = likes;
-	}
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
+    }
 
-	public List<Comment> getComments() {
-		return comments;
-	}
+    public List<Comment> getComments() {
+        return comments;
+    }
 
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
-	}
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
-	public Post() {
-	}
+    public Post() {
+    }
 
-	public Post(Integer postID, User user, LocalDateTime time, String text, byte[] image, List<Like> likes,
-			List<Comment> comments) {
-		this.postID = postID;
-		this.user = user;
-		this.time = time;
-		this.text = text;
-		this.image = image;
-		this.likes = likes;
-		this.comments = comments;
-	}
-	
-	
+    public Post(Integer postId, User user, LocalDateTime time, String text, byte[] image, List<Like> likes,
+                List<Comment> comments) {
+        this.postId = postId;
+        this.user = user;
+        this.time = time;
+        this.text = text;
+        this.image = image;
+        this.likes = likes;
+        this.comments = comments;
+    }
+
+    @Override
+    public String toString() {
+        return "Post [postId=" + postId + ", user=" + user + ", time=" + time + ", text=" + text + "]";
+    }
 }

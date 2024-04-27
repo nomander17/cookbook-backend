@@ -11,101 +11,117 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name="user")
+@Table(name = "user")
 public class User {
-	@Id
-	@Column(name="userID")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer userID;
-	
-	@Column(name="username", nullable=false, unique=true)
-	@NotNull
-	private String username;
-	
-	@NotNull
-	@Column(name="email", nullable=false, unique=true)
-	private String email;
-	
-	@NotNull
-	@Column(name="password", nullable=false)
-	private String password;
-	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name="userID")
-	private List<Comment> comment=new ArrayList<>();
-	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name="userID")
-	private List<Like> like=new ArrayList<>();
-	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name="userID")
+    @Id
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer userId;
+
+    @Column(name = "username", nullable = false, unique = true)
+    @NotNull
+    private String username;
+
+    @NotNull
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
+    @NotNull
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
-	private List<Post> post=new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@JsonIgnore
+    private List<Like> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Post> posts = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "User [userId=" + userId + ", username=" + username + ", email=" + email + ", password=" + password + "]";
+    }
+
 	
-	public Integer getUserID() {
-		return userID;
+    // Constructors, getter, setters
+
+	public Integer getUserId() {
+		return userId;
 	}
-	public void setUserID(Integer userID) {
-		this.userID = userID;
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
+
 	public String getUsername() {
 		return username;
 	}
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	public List<Comment> getComment() {
-		return comment;
-	}
-	public void setComment(List<Comment> comment) {
-		this.comment = comment;
-	}
-	public List<Like> getLike() {
-		return like;
-	}
-	public void setLike(List<Like> like) {
-		this.like = like;
-	}
-	public List<Post> getPost() {
-		return post;
-	}
-	public void setPost(List<Post> post) {
-		this.post = post;
-	}
-	public User()
-	{
-		
-	}
-	public User(int userID, String username, String email, String password) {
-		super();
-		this.userID = userID;
-		this.username = username;
-		this.email = email;
-		this.password = password;
-	}
-	
+
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	@Override
-	public String toString() {
-		return "User [userID=" + userID + ", username=" + username + ", email=" + email + ", password=" + password + "]";
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public List<Like> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(List<Like> likes) {
+		this.likes = likes;
+	}
+
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
+
+	public User() {
+	}
+
+	public User(Integer userId, @NotNull String username, @NotNull String email, @NotNull String password,
+			List<Comment> comments, List<Like> likes, List<Post> posts) {
+		this.userId = userId;
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.comments = comments;
+		this.likes = likes;
+		this.posts = posts;
 	}
 }
-

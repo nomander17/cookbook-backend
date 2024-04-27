@@ -52,7 +52,7 @@ public class PostController {
     // Create a new post
     @PostMapping("/")
     public ResponseEntity<Object> createPost(@RequestBody PostDTO postDTO) {
-        User user = userService.getUserById(postDTO.getUserID());
+        User user = userService.getUserById(postDTO.getUserId());
         if(user == null){
             return ResponseEntity.badRequest().body("User does not exist.");
         }

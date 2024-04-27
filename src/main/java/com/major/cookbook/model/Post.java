@@ -15,41 +15,35 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name="post")
+@Table(name = "post")
 public class Post {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="postID")
-	private Integer postID;
-	
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="userID")
-	private User userID;
-	
-	@Column(name="time")
-	@Temporal(TemporalType.TIMESTAMP)
-	private LocalDateTime time;
-	
-	@Column(name="text",length=3000,nullable=false)
-	private String text;
-	
-	@Lob
-	@Column(name="image", columnDefinition="BLOB")
-	private byte[] image;
-	
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="postID")
-	private List<Like> like=new ArrayList<>();
-	
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="postID")
-	private List<Comment> comment = new ArrayList<>();
-	
-	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "postID")
+    private Integer postID;
+
+    @ManyToOne
+    @JoinColumn(name = "userID")
+    private User user;
+
+    @Column(name = "time")
+    private LocalDateTime time;
+
+    @Column(name = "text", length = 3000, nullable = false)
+    private String text;
+
+    @Lob
+    @Column(name = "image", columnDefinition = "BLOB")
+    private byte[] image;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
 	public Integer getPostID() {
 		return postID;
 	}
@@ -58,28 +52,12 @@ public class Post {
 		this.postID = postID;
 	}
 
-	public User getUserID() {
-		return userID;
+	public User getUser() {
+		return user;
 	}
 
-	public void setUserID(User userID) {
-		this.userID = userID;
-	}
-
-	public List<Like> getLike() {
-		return like;
-	}
-
-	public void setLike(List<Like> like) {
-		this.like = like;
-	}
-
-	public List<Comment> getComment() {
-		return comment;
-	}
-
-	public void setComment(List<Comment> comment) {
-		this.comment = comment;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public LocalDateTime getTime() {
@@ -90,4 +68,51 @@ public class Post {
 		this.time = time;
 	}
 
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	public List<Like> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(List<Like> likes) {
+		this.likes = likes;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public Post() {
+	}
+
+	public Post(Integer postID, User user, LocalDateTime time, String text, byte[] image, List<Like> likes,
+			List<Comment> comments) {
+		this.postID = postID;
+		this.user = user;
+		this.time = time;
+		this.text = text;
+		this.image = image;
+		this.likes = likes;
+		this.comments = comments;
+	}
+	
+	
 }

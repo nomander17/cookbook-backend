@@ -34,10 +34,11 @@ public class Comment {
 	public void setCommentID(Integer commentID) {
 		this.commentID = commentID;
 	}
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="postID")
-	private Post postID;
 	
+	@ManyToOne
+	@JoinColumn(name = "postID")
+	private Post post;
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "userID")
 	private User userID;
@@ -56,9 +57,13 @@ public class Comment {
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinColumn(name="commentID")
 	private List<Like> like = new ArrayList<>();
-	
-	public void setPostID(Post postID) {
-		this.postID = postID;
+
+	public Post getPost() {
+		return post;
+	}
+
+	public void setPost(Post post) {
+		this.post = post;
 	}
 
 	public User getUserID() {
@@ -76,7 +81,23 @@ public class Comment {
 	public void setTime(LocalDateTime time) {
 		this.time = time;
 	}
-	
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
 	public List<Like> getLike() {
 		return like;
 	}
@@ -84,9 +105,20 @@ public class Comment {
 	public void setLike(List<Like> like) {
 		this.like = like;
 	}
-	public Post getPostID() {
-		return postID;
+
+	
+	public Comment() {
+	}
+
+	public Comment(Integer commentID, Post post, User userID, LocalDateTime time, String text, byte[] image,
+			List<Like> like) {
+		this.commentID = commentID;
+		this.post = post;
+		this.userID = userID;
+		this.time = time;
+		this.text = text;
+		this.image = image;
+		this.like = like;
 	}
 	
-	//json content	
 }

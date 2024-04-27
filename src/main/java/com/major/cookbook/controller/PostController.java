@@ -1,5 +1,6 @@
 package com.major.cookbook.controller;
 
+import com.major.cookbook.dto.PostDTO;
 import com.major.cookbook.model.Post;
 import com.major.cookbook.model.User;
 import com.major.cookbook.services.PostService;
@@ -50,16 +51,18 @@ public class PostController {
 
     // Create a new post
     @PostMapping("/")
-    public ResponseEntity<Object> createPost(@RequestBody Post newPost) {
-        logger.debug("Recieved post: {}", newPost);
-        Integer userID = newPost.getUserID().getUserID();
-        User user = userService.getUserById(userID);
+    public ResponseEntity<Object> createPost(@RequestBody PostDTO postDTO) {
+        User user = userService.getUserById(postDTO.getUserID());
         if(user == null){
             return ResponseEntity.badRequest().body("User does not exist.");
         }
         else {
-            newPost.setUserID(user);
-            Post createdPost = this.postService.createPost(newPost);
+            Post post = new Post();
+            post.setUser(user);
+            post.setText(postDTO.getText());
+            post.setImage(postDTO.getImage());
+            post.setTime(postDTO.getTime());
+            Post createdPost = this.postService.createPost(post);
             return ResponseEntity.ok(createdPost);
         }
     }

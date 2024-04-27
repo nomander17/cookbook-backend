@@ -3,6 +3,8 @@ package com.major.cookbook.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,6 +46,7 @@ public class User {
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="userID")
+	@JsonIgnore
 	private List<Post> post=new ArrayList<>();
 	
 	public Integer getUserID() {

@@ -22,9 +22,9 @@ public class Like {
 	@Column(name="likeID")
 	private Integer likeID;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="postID")
-	private Post postID;
+	@ManyToOne
+	@JoinColumn(name = "postID")
+	private Post post;
 	
 	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="commentID")
@@ -47,11 +47,11 @@ public class Like {
 	}
 
 	public Post getPostID() {
-		return postID;
+		return post;
 	}
 
 	public void setPostID(Post postID) {
-		this.postID = postID;
+		this.post = postID;
 	}
 
 	public Comment getCommentID() {

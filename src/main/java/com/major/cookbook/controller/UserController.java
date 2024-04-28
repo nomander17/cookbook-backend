@@ -78,9 +78,11 @@ public class UserController {
     	}else {
 	    	User user = new User();
 	        user.setUserId(userDTO.getUserId());
+	        user.setFullName(userDTO.getFullName());
 	        user.setUsername(userDTO.getUsername());
 	        user.setEmail(userDTO.getEmail());
 	        user.setPassword(userDTO.getPassword());
+	        user.setAvatar(userDTO.getAvatar());
 	        user.setIsAdmin(false);
 	        User updatedUser = this.userService.updateUser(user);
 	        return ResponseEntity.ok(updatedUser);

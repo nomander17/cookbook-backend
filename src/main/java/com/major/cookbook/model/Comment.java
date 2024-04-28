@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "comment")
 public class Comment {
@@ -42,6 +44,7 @@ public class Comment {
     @Column(name = "image", columnDefinition = "BLOB")
     private byte[] image;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
 

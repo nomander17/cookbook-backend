@@ -7,12 +7,10 @@ public class UserDTO {
     private String username;
     private String email;
     private String password;
+    private String fullName;
+    private byte[] avatar;
  
     // Constructors, getter, setters
-
-	public Integer getUserId() {
-		return userId;
-	}
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
@@ -41,13 +39,37 @@ public class UserDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public byte[] getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(byte[] avatar) {
+		this.avatar = avatar;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
 	public UserDTO() {
 	}
 
-	public UserDTO(Integer userId, @NotNull String username, @NotNull String email, @NotNull String password) {
+	public UserDTO(Integer userId,@NotNull String username,@NotNull String email,@NotNull String password,@NotNull String fullName, byte[] avatar) {
+		super();
 		this.userId = userId;
 		this.username = username;
 		this.email = email;
 		this.password = password;
+		this.fullName = fullName;
+		this.avatar = avatar;
 	}
 }

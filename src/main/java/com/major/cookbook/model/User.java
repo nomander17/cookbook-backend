@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -35,6 +36,14 @@ public class User {
     @NotNull
     @Column(name = "password", nullable = false)
     private String password;
+    
+    @NotNull
+    @Column(name = "FullName", nullable = false)
+    private String fullName;
+    
+    @Lob
+    @Column(name = "avatar", columnDefinition = "BLOB")
+    private byte[] avatar;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
@@ -88,9 +97,29 @@ public class User {
 	}
 
 
+	public String getFullName() {
+		return fullName;
+	}
+
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+
+	public byte[] getAvatar() {
+		return avatar;
+	}
+
+
+	public void setAvatar(byte[] avatar) {
+		this.avatar = avatar;
+	}
+
+
 	@Override
     public String toString() {
-        return "User [userId=" + userId + ", username=" + username + ", email=" + email + ", password=" + password + "]";
+        return "User [userId=" + userId + ", username=" + username + ", fullName=" + fullName + ", email=" + email + ", password=" + password + "]";
     }
 
 	
@@ -156,7 +185,7 @@ public class User {
 	}
 
 	public User(Integer userId, @NotNull String username, @NotNull String email, @NotNull String password,
-			List<Comment> comments, List<Like> likes, List<Post> posts) {
+			@NotNull String fullName, byte[] avatar, List<Comment> comments, List<Like> likes, List<Post> posts) {
 		this.userId = userId;
 		this.username = username;
 		this.email = email;

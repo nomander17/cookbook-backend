@@ -26,6 +26,7 @@ public class CommentServiceImp implements CommentService{
 	}
 	@Override
 	public List<Comment> getCommentsForPost(int postID) {
+		//Getting the post object to search using that
 		Optional<Post> post = postRepo.findById(postID);
 		return commentRepo.findByPost(post);
 	}

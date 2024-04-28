@@ -64,7 +64,7 @@ public class UserServiceImp implements UserService {
 			User admin = new User();
             admin.setUsername(adminUsername);
             admin.setEmail(adminEmail);
-            admin.setIs_admin(true);
+            admin.setIsAdmin(true);
             admin.setPassword(adminPassword);
 			userRepo.save(admin);
 			return admin;
@@ -72,5 +72,10 @@ public class UserServiceImp implements UserService {
 		else {
 			return null;
 		}
+	}
+
+	@Override
+	public User getAdminUserId() {
+		return userRepo.findUserIdByIsAdminTrue();
 	}
 }

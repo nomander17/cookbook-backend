@@ -56,7 +56,7 @@ public class User {
     
     @NotNull
     @Column(name = "is_admin", nullable = false)
-    private boolean is_admin=false;
+    private boolean isAdmin=false;
 
     public List<User> getFollowers() {
 		return followers;
@@ -75,16 +75,16 @@ public class User {
 
 	public void setFollowing(List<User> following) {
 		this.following = following;
+	}	
+
+
+	public boolean getIsAdmin() {
+		return isAdmin;
 	}
 
 
-	public boolean isIs_admin() {
-		return is_admin;
-	}
-
-
-	public void setIs_admin(boolean is_admin) {
-		this.is_admin = is_admin;
+	public void setIsAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 
 

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.major.cookbook.dto.UserDTO;
-import com.major.cookbook.model.Post;
 import com.major.cookbook.model.User;
 import com.major.cookbook.services.UserService;
 
@@ -36,7 +35,7 @@ public class AuthController {
             user.setUsername(userDTO.getUsername());
             user.setEmail(userDTO.getEmail());
             user.setPassword(userDTO.getPassword());
-            user.setIs_admin(false);
+            user.setIsAdmin(false);
             User newUser = this.userService.addUser(user);
             return ResponseEntity.ok(newUser.toString());
         }

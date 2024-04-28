@@ -25,4 +25,7 @@ public interface UserService {
 	
 	//Create Admin if user table is empty
 	public User addAdmin();
+    
+	//Return admin's userID
+	public User getAdminUserId();
 }

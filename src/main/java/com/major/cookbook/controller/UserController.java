@@ -35,14 +35,23 @@ public class UserController {
     if (user == null) {
       return ResponseEntity.notFound().build();
     } else {
-      return ResponseEntity.ok(user);
+    	User admin = this.userService.getAdminUserId();
+    	int adminId = admin.getUserId();
+    	if(Integer.parseInt(userID)==adminId) {
+    		logger.warn("Admin info cannot be accessed");
+    		return ResponseEntity.badRequest().body("Admin info cannot be accessed");
+    	}else {
+    		return ResponseEntity.ok(user);
+    	}
     }
   }
 
   // Returns ALL registered users
   @GetMapping("/")
   public ResponseEntity<Object> getUsers() {
-    List<User> users = this.userService.getUsersExceptUserId(1);
+	User admin = this.userService.getAdminUserId();
+	int adminId = admin.getUserId();
+	List<User> users = this.userService.getUsersExceptUserId(adminId);
     if (users.isEmpty()) {
       return ResponseEntity.noContent().build();
     } else {
@@ -61,14 +70,21 @@ public class UserController {
       logger.warn("UserID {} not found", userID);
       return ResponseEntity.notFound().build();
     }else {
-        User user = new User();
-        user.setUserId(userDTO.getUserId());
-        user.setUsername(userDTO.getUsername());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-        user.setIs_admin(false);
-        User updatedUser = this.userService.updateUser(user);
-        return ResponseEntity.ok(updatedUser);
+    	User admin = this.userService.getAdminUserId();
+    	int adminId = admin.getUserId();
+    	if(Integer.parseInt(userID)==adminId) {
+    		logger.warn("Admin cannot be updated");
+    		return ResponseEntity.badRequest().body("Admin cannot be updated");
+    	}else {
+	    	User user = new User();
+	        user.setUserId(userDTO.getUserId());
+	        user.setUsername(userDTO.getUsername());
+	        user.setEmail(userDTO.getEmail());
+	        user.setPassword(userDTO.getPassword());
+	        user.setIsAdmin(false);
+	        User updatedUser = this.userService.updateUser(user);
+	        return ResponseEntity.ok(updatedUser);
+    	}
     }
   }
 

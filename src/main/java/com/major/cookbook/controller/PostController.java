@@ -28,9 +28,9 @@ public class PostController {
     private static final Logger logger = LoggerFactory.getLogger(PostController.class);
 
     // Returns a specified post
-    @GetMapping("/{postID}")
-    public ResponseEntity<Object> getPost(@PathVariable String postID) {
-        Post post = this.postService.getPostById(Integer.parseInt(postID));
+    @GetMapping("/{postId}")
+    public ResponseEntity<Object> getPost(@PathVariable String postId) {
+        Post post = this.postService.getPostById(Integer.parseInt(postId));
         if (post == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -68,13 +68,13 @@ public class PostController {
     }
 
     // Update a specified post
-    @PutMapping("/{postID}")
-    public ResponseEntity<Object> updatePost(@PathVariable String postID, @RequestBody Post updatedPost) {
-        Post post = this.postService.getPostById(Integer.parseInt(postID));
-        logger.debug("PostID : {}", postID);
+    @PutMapping("/{postId}")
+    public ResponseEntity<Object> updatePost(@PathVariable String postId, @RequestBody Post updatedPost) {
+        Post post = this.postService.getPostById(Integer.parseInt(postId));
+        logger.debug("PostId : {}", postId);
         logger.debug("Post: {}", post);
         if (post == null) {
-            logger.warn("PostID {} not found", postID);
+            logger.warn("PostId {} not found", postId);
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok(this.postService.updatePost(updatedPost));
@@ -82,8 +82,8 @@ public class PostController {
     }
 
     // Delete a specified post
-    @DeleteMapping("/{postID}")
-    public ResponseEntity<Post> deletePost(@PathVariable String postID) {
-        return ResponseEntity.ok(this.postService.deletePost(Integer.parseInt(postID)));
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Post> deletePost(@PathVariable String postId) {
+        return ResponseEntity.ok(this.postService.deletePost(Integer.parseInt(postId)));
     }
 }

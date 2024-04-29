@@ -51,8 +51,8 @@ public class UserServiceImp implements UserService {
 	}
 
 	@Override
-	public User deleteUser(int userID) {
-		User user = getUserById(userID);
+	public User deleteUser(int userId) {
+		User user = getUserById(userId);
 		userRepo.delete(user);
 		return user;
 	}

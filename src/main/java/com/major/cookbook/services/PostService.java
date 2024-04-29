@@ -10,12 +10,12 @@ public interface PostService {
     // GET all posts
     public List<Post> getPosts();
 
-    // GET specific post by ID
+    // GET specific post by Id
     public Post getPostById(int postId);
 
     // Update a particular post
     public Post updatePost(Post post);
 
     // Delete a particular post
-    public Post deletePost(int postID);
+    public Post deletePost(int postId);
 }

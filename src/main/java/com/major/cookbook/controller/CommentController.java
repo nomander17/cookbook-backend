@@ -41,9 +41,9 @@ public class CommentController {
 	private static final Logger logger = LoggerFactory.getLogger(PostController.class);
 	
 	// Returns a specified comment from a specific post
-    @GetMapping("/{postId}/comments/{commentID}")
-    public ResponseEntity<Object> getComment(@PathVariable String postID, @PathVariable String commentID) {
-        Comment comment = this.commentService.getCommentById(Integer.parseInt(postID), Integer.parseInt(commentID));
+    @GetMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<Object> getComment(@PathVariable String postId, @PathVariable String commentId) {
+        Comment comment = this.commentService.getCommentById(Integer.parseInt(postId), Integer.parseInt(commentId));
         if (comment == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -51,10 +51,10 @@ public class CommentController {
         }
     }
 
-    // Returns ALL comments under a specific postID
-    @GetMapping("/{postID}/comments")
-    public ResponseEntity<Object> getComments(@PathVariable String postID) {
-        List<Comment> comments = this.commentService.getCommentsForPost(Integer.parseInt(postID));
+    // Returns ALL comments under a specific postId
+    @GetMapping("/{postId}/comments")
+    public ResponseEntity<Object> getComments(@PathVariable String postId) {
+        List<Comment> comments = this.commentService.getCommentsForPost(Integer.parseInt(postId));
         if (comments.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
@@ -62,8 +62,8 @@ public class CommentController {
         }
     }
 
-    // Create a new comment under a specific postID
-    @PostMapping("/{postID}/comments")
+    // Create a new comment under a specific postId
+    @PostMapping("/{postId}/comments")
     public ResponseEntity<Object> createComment(@RequestBody CommentDTO commentDTO) {
         User user = userService.getUserById(commentDTO.getUserId());
         Post post = postService.getPostById(commentDTO.getPostId());
@@ -83,13 +83,13 @@ public class CommentController {
     }
 
     // Update a specified comment under a post
-    @PutMapping("{postID}/comments/{commentID}")
-    public ResponseEntity<Object> updateComment(@PathVariable String postID, @PathVariable String commentID, @RequestBody Comment updatedComment) {
-    	Comment comment = this.commentService.getCommentById(Integer.parseInt(postID),Integer.parseInt(commentID));
-        logger.debug("CommentID : {}", commentID);
+    @PutMapping("{postId}/comments/{commentId}")
+    public ResponseEntity<Object> updateComment(@PathVariable String postId, @PathVariable String commentId, @RequestBody Comment updatedComment) {
+    	Comment comment = this.commentService.getCommentById(Integer.parseInt(postId),Integer.parseInt(commentId));
+        logger.debug("CommentId : {}", commentId);
         logger.debug("Comment: {}", comment);
         if(comment == null) {
-            logger.warn("CommentID {} not found", commentID);
+            logger.warn("CommentId {} not found", commentId);
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok(this.commentService.updateComment(updatedComment));
@@ -97,8 +97,8 @@ public class CommentController {
     }
 
     // Delete a specified comment
-    @DeleteMapping("{postID}/comments/{commentID}")
-    public ResponseEntity<Comment> deleteComment(@PathVariable String postID, @PathVariable String commentID) {
-    	return ResponseEntity.ok(this.commentService.deleteCommentByPostAndId(Integer.parseInt(postID), Integer.parseInt(commentID)));
+    @DeleteMapping("{postId}/comments/{commentId}")
+    public ResponseEntity<Comment> deleteComment(@PathVariable String postId, @PathVariable String commentId) {
+    	return ResponseEntity.ok(this.commentService.deleteCommentByPostAndId(Integer.parseInt(postId), Integer.parseInt(commentId)));
     }
 }

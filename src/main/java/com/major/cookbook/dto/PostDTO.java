@@ -33,8 +33,8 @@ public class PostDTO {
     }
     public PostDTO() {
     }
-    public PostDTO(int userID, String text, LocalDateTime time, byte[] image) {
-        this.userId = userID;
+    public PostDTO(int userId, String text, LocalDateTime time, byte[] image) {
+        this.userId = userId;
         this.text = text;
         this.time = time;
         this.image = image;

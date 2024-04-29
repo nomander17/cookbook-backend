@@ -11,7 +11,7 @@ public interface UserService {
 	// GET all users
 	public List<User> getUsersExceptUserId(int userId);
 
-	// GET specific user by ID
+	// GET specific user by Id
 	public User getUserById(int userId);
 
 	// GET specific user by email
@@ -21,12 +21,12 @@ public interface UserService {
 	public User updateUser(User user);
 
 	// Delete a particular user
-	public User deleteUser(int userID);
+	public User deleteUser(int userId);
 	
 	//Create Admin if user table is empty
 	public User addAdmin();
     
-	//Return admin's userID
+	//Return admin's userId
 	public User getAdminUserId();
 
     public List<User> getAllUsers();

@@ -10,19 +10,19 @@ public interface CommentService {
 	//Create a new comment
 	public Comment createComment(Comment comment);		
 		
-	//GET ALL comments under a specific postID
-	public List<Comment> getCommentsForPost(int postID);
+	//GET ALL comments under a specific postId
+	public List<Comment> getCommentsForPost(int postId);
 		
-	//GET a specific comment by postID and commentID
-	public Comment getCommentById(int postID, int commentId);	
+	//GET a specific comment by postId and commentId
+	public Comment getCommentById(int postId, int commentId);	
 	
 	//Update a specific comment
 	public Comment updateComment(Comment updatedComment);
 
-	//Delete a particular comment by PostID and commentID
-	public Comment deleteCommentByPostAndId(int postID, int commentId);
+	//Delete a particular comment by PostId and commentId
+	public Comment deleteCommentByPostAndId(int postId, int commentId);
 
-	//Delete a comment by its ID
+	//Delete a comment by its Id
 	public Comment deleteCommentById(int commentId);
 
 	public List<Comment> getAllComments();

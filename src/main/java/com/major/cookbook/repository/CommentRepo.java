@@ -13,7 +13,7 @@ public interface CommentRepo extends JpaRepository<Comment, Integer>{
 	//Returns a list of comments under a specific post
 	public List<Comment> findByPost(Optional<Post> post);
 
-	//Returns a Comment when it matches with the post object and commentID
-	public Optional<Comment> findByPostAndCommentId(Optional<Post> post, int commentID);
+	//Returns a Comment when it matches with the post object and commentId
+	public Optional<Comment> findByPostAndCommentId(Optional<Post> post, int commentId);
 
 }

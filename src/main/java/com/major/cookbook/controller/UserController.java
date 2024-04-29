@@ -29,15 +29,15 @@ public class UserController {
   private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
   // Returns a specified user
-  @GetMapping("/{userID}")
-  public ResponseEntity<Object> getUser(@PathVariable String userID) {
-    User user = this.userService.getUserById(Integer.parseInt(userID));
+  @GetMapping("/{userId}")
+  public ResponseEntity<Object> getUser(@PathVariable String userId) {
+    User user = this.userService.getUserById(Integer.parseInt(userId));
     if (user == null) {
       return ResponseEntity.notFound().build();
     } else {
     	User admin = this.userService.getAdminUserId();
     	int adminId = admin.getUserId();
-    	if(Integer.parseInt(userID)==adminId) {
+    	if(Integer.parseInt(userId)==adminId) {
     		logger.warn("Admin info cannot be accessed");
     		return ResponseEntity.badRequest().body("Admin info cannot be accessed");
     	}else {
@@ -47,7 +47,7 @@ public class UserController {
   }
 
   // Returns ALL registered users
-  @GetMapping("/")
+  @GetMapping("")
   public ResponseEntity<Object> getUsers() {
 	User admin = this.userService.getAdminUserId();
 	int adminId = admin.getUserId();
@@ -61,18 +61,18 @@ public class UserController {
   }
 
   // Update a specified user
-  @PutMapping("/{userID}")
-  public ResponseEntity<Object> updateUser(@PathVariable String userID, @RequestBody UserDTO userDTO) {
-    User userExist = this.userService.getUserById(Integer.parseInt(userID));
-    logger.debug("UserID : {}", userID);
+  @PutMapping("/{userId}")
+  public ResponseEntity<Object> updateUser(@PathVariable String userId, @RequestBody UserDTO userDTO) {
+    User userExist = this.userService.getUserById(Integer.parseInt(userId));
+    logger.debug("UserId : {}", userId);
     logger.debug("User: {}", userExist);
     if (userExist == null) {
-      logger.warn("UserID {} not found", userID);
+      logger.warn("UserId {} not found", userId);
       return ResponseEntity.notFound().build();
     }else {
     	User admin = this.userService.getAdminUserId();
     	int adminId = admin.getUserId();
-    	if(Integer.parseInt(userID)==adminId) {
+    	if(Integer.parseInt(userId)==adminId) {
     		logger.warn("Admin cannot be updated");
     		return ResponseEntity.badRequest().body("Admin cannot be updated");
     	}else {
@@ -91,8 +91,8 @@ public class UserController {
   }
 
   // Delete a specified user
-  @DeleteMapping("/{userID}")
-  public ResponseEntity<User> deleteUser(@PathVariable String userID) {
-    return ResponseEntity.ok(this.userService.deleteUser(Integer.parseInt(userID)));
+  @DeleteMapping("/{userId}")
+  public ResponseEntity<User> deleteUser(@PathVariable String userId) {
+    return ResponseEntity.ok(this.userService.deleteUser(Integer.parseInt(userId)));
   }
 }

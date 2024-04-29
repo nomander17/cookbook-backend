@@ -36,7 +36,7 @@ public class AdminController {
     @Autowired
     private LikeService likeService;
 
-    @GetMapping("/users/")
+    @GetMapping("/users")
     public ResponseEntity<Object> getUsers() {
         List<User> users = userService.getAllUsers();
         if (users.isEmpty()) {
@@ -46,7 +46,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/posts/")
+    @GetMapping("/posts")
     public ResponseEntity<Object> getPosts() {
         List<Post> posts = postService.getPosts();
         if (posts.isEmpty()) {
@@ -56,7 +56,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/comments/")
+    @GetMapping("/comments")
     public ResponseEntity<Object> getComments() {
         List<Comment> comments = commentService.getAllComments();
         if (comments.isEmpty()) {
@@ -66,7 +66,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/likes/")
+    @GetMapping("/likes")
     public ResponseEntity<Object> getLikes() {
         List<Like> likes = likeService.getAllLikes();
         if (likes.isEmpty()) {
@@ -76,25 +76,25 @@ public class AdminController {
         }
     }
 
-    @DeleteMapping("/users/{userId}/")
+    @DeleteMapping("/users/{userId}")
     public ResponseEntity<Object> deleteUser(@PathVariable String userId) {
         userService.deleteUser(Integer.parseInt(userId));
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/posts/{postId}/")
+    @DeleteMapping("/posts/{postId}")
     public ResponseEntity<Object> deletePost(@PathVariable String postId) {
         postService.deletePost(Integer.parseInt(postId));
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/comments/{commentId}/")
+    @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<Object> deleteComment(@PathVariable String commentId) {
         commentService.deleteCommentById(Integer.parseInt(commentId));
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/likes/{likeId}/")
+    @DeleteMapping("/likes/{likeId}")
     public ResponseEntity<Object> deleteLike(@PathVariable String likeId) {
         likeService.deleteLikeById(Integer.parseInt(likeId));
         return ResponseEntity.ok().build();

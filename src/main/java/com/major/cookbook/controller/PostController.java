@@ -39,7 +39,7 @@ public class PostController {
     }
 
     // Returns ALL posts
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<Object> getPosts() {
         List<Post> posts = this.postService.getPosts();
         if (posts.isEmpty()) {
@@ -50,7 +50,7 @@ public class PostController {
     }
 
     // Create a new post
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<Object> createPost(@RequestBody PostDTO postDTO) {
         User user = userService.getUserById(postDTO.getUserId());
         if(user == null){

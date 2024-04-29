@@ -41,7 +41,7 @@ public class CommentController {
 	private static final Logger logger = LoggerFactory.getLogger(PostController.class);
 	
 	// Returns a specified comment from a specific post
-    @GetMapping("/{postId}/comments/{commentID}/")
+    @GetMapping("/{postId}/comments/{commentID}")
     public ResponseEntity<Object> getComment(@PathVariable String postID, @PathVariable String commentID) {
         Comment comment = this.commentService.getCommentById(Integer.parseInt(postID), Integer.parseInt(commentID));
         if (comment == null) {
@@ -52,7 +52,7 @@ public class CommentController {
     }
 
     // Returns ALL comments under a specific postID
-    @GetMapping("/{postID}/comments/")
+    @GetMapping("/{postID}/comments")
     public ResponseEntity<Object> getComments(@PathVariable String postID) {
         List<Comment> comments = this.commentService.getCommentsForPost(Integer.parseInt(postID));
         if (comments.isEmpty()) {
@@ -63,7 +63,7 @@ public class CommentController {
     }
 
     // Create a new comment under a specific postID
-    @PostMapping("/{postID}/comments/")
+    @PostMapping("/{postID}/comments")
     public ResponseEntity<Object> createComment(@RequestBody CommentDTO commentDTO) {
         User user = userService.getUserById(commentDTO.getUserId());
         Post post = postService.getPostById(commentDTO.getPostId());

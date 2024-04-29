@@ -8,13 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class MainController {
-    @GetMapping("/")
+    @GetMapping("")
     public String getIndex() {
-        return new String("index");
+        return "redirect:http://localhost:3000";
     }
     @GetMapping("/landing")
     public String getLanding() {
-        return "http://localhost:3000";
+        return "http://localhost:3000/";
     }
-    
 }

@@ -20,3 +20,4 @@ logging.level.com.your.package=DEBUG
 admin.username=
 admin.email=
 admin.password=
+admin.fullName=

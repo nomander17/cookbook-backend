@@ -29,4 +29,8 @@ public interface LikeService {
 	//To get all likes from Comment
 	@Query("SELECT i FROM Like i WHERE i.comment.id=:commentId")
 	public List<Like> getCommentLike(@Param("commentId") int commentId);
+
+    public List<Like> getAllLikes();
+
+    public void deleteLikeById(int int1);
 }

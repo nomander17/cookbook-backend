@@ -28,4 +28,6 @@ public interface UserService {
     
 	//Return admin's userID
 	public User getAdminUserId();
+
+    public List<User> getAllUsers();
 }

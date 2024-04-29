@@ -81,4 +81,9 @@ public class UserServiceImp implements UserService {
 	public User getAdminUserId() {
 		return userRepo.findUserIdByIsAdminTrue();
 	}
+
+	@Override
+	public List<User> getAllUsers() {
+		return userRepo.findAll();
+	}
 }

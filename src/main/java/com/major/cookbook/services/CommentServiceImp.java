@@ -25,15 +25,15 @@ public class CommentServiceImp implements CommentService{
 		return comment;
 	}
 	@Override
-	public List<Comment> getCommentsForPost(int postID) {
+	public List<Comment> getCommentsForPost(int postId) {
 		//Getting the post object to search using that
-		Optional<Post> post = postRepo.findById(postID);
+		Optional<Post> post = postRepo.findById(postId);
 		return commentRepo.findByPost(post);
 	}
 	@Override
-	public Comment getCommentById(int postID, int commentID) {
-		Optional<Post> post = postRepo.findById(postID);
-		Optional<Comment> comment = commentRepo.findByPostAndCommentId(post, commentID);
+	public Comment getCommentById(int postId, int commentId) {
+		Optional<Post> post = postRepo.findById(postId);
+		Optional<Comment> comment = commentRepo.findByPostAndCommentId(post, commentId);
 		return comment.orElse(null);
 	}
 	@Override
@@ -42,9 +42,9 @@ public class CommentServiceImp implements CommentService{
 		return updatedComment;
 	}
 	@Override
-	public Comment deleteCommentByPostAndId(int postID, int commentID) {
-		Optional<Post> post = postRepo.findById(postID);
-		Optional<Comment> optionalComment = commentRepo.findByPostAndCommentId(post, commentID);
+	public Comment deleteCommentByPostAndId(int postId, int commentId) {
+		Optional<Post> post = postRepo.findById(postId);
+		Optional<Comment> optionalComment = commentRepo.findByPostAndCommentId(post, commentId);
         if (optionalComment.isPresent()) {
             Comment commentToDelete = optionalComment.get();
             commentRepo.delete(commentToDelete);
@@ -52,6 +52,19 @@ public class CommentServiceImp implements CommentService{
         }
         return null; // Comment not found or not associated with the po
 	}
-    
-	
+
+	@Override
+	public Comment deleteCommentById(int commentId) {
+		Optional<Comment> optionalComment = commentRepo.findById(commentId);
+		if (optionalComment.isPresent()) {
+			Comment commentToDelete = optionalComment.get();
+			commentRepo.delete(commentToDelete);
+			return commentToDelete;
+		}
+		return null; // Comment not found
+	}
+	@Override
+	public List<Comment> getAllComments() {
+		return commentRepo.findAll();
+	}
 }

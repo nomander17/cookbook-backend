@@ -49,6 +49,17 @@ public class LikeServiceImp implements LikeService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
- 
+
+	@Override
+	public List<Like> getAllLikes() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'getAllLikes'");
+	}
+
+	@Override
+	public void deleteLikeById(int int1) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'deleteLikeById'");
+	}
+	 
 }

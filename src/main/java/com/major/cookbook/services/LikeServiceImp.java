@@ -1,12 +1,17 @@
 package com.major.cookbook.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.major.cookbook.model.Comment;
 import com.major.cookbook.model.Like;
+import com.major.cookbook.model.Post;
+import com.major.cookbook.repository.CommentRepo;
 import com.major.cookbook.repository.LikeRepo;
+import com.major.cookbook.repository.PostRepo;
 
 @Service
 public class LikeServiceImp implements LikeService {
@@ -14,58 +19,58 @@ public class LikeServiceImp implements LikeService {
 	@Autowired
 	private LikeRepo likeRepo;
 
+	@Autowired
+	private PostRepo postRepo;
+	
+	@Autowired
+	private CommentRepo commentRepo;
+	
 	@Override
 	public Like addPostLike(Like like) {
-		// TODO Auto-generated method stub
-		return null;
+		likeRepo.save(like);
+		return like;
 	}
 
 	@Override
 	public Like addCommentLike(Like like) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Like alreadyLikedPost(int userId, int postId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Like alreadyLikedComment(int userId, int commentId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Like> getPostLike(int postId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Like> getCommentLike(int commentId) {
-		// TODO Auto-generated method stub
-		return null;
+		likeRepo.save(like);
+		return like;
 	}
 
 	@Override
 	public List<Like> getAllLikes() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getAllLikes'");
+		return likeRepo.findAll();
+		//throw new UnsupportedOperationException("Unimplemented method 'getAllLikes'");
 	}
 
 	@Override
-	public void deleteLikeById(int int1) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'deleteLikeById'");
+	public Like deleteLikeById(int likeId) {
+		Optional<Like> optionalLike = likeRepo.findById(likeId);
+		if (optionalLike.isPresent()) {
+			Like likeToDelete = optionalLike.get();
+			likeRepo.delete(likeToDelete);
+			return likeToDelete;
+		}
+		return null;
+		//throw new UnsupportedOperationException("Unimplemented method 'deleteLikeById'");
 	}
 
 	@Override
 	public void updateLike(Like like) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'updateLike'");
+	}
+
+	@Override
+	public List<Like> getLikesByPostId(int postId) {
+		Optional<Post> post = postRepo.findById(postId);
+		return likeRepo.findByPost(post);
+	}
+
+	@Override
+	public List<Like> getLikesByCommentId(int commentId) {
+		Optional<Comment> comment = commentRepo.findById(commentId);
+		return likeRepo.findByComment(comment);
 	}
 	 
 }

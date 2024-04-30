@@ -38,8 +38,8 @@ public class User {
     private String password;
     
     @NotNull
-    @Column(name = "FullName", nullable = false)
-    private String fullName;
+    @Column(name = "name", nullable = false)
+    private String name;
     
     @Lob
     @Column(name = "avatar", columnDefinition = "BLOB")
@@ -97,13 +97,13 @@ public class User {
 	}
 
 
-	public String getFullName() {
-		return fullName;
+	public String getName() {
+		return name;
 	}
 
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 
@@ -119,7 +119,7 @@ public class User {
 
 	@Override
     public String toString() {
-        return "User [userId=" + userId + ", username=" + username + ", fullName=" + fullName + ", email=" + email + ", password=" + password + "]";
+        return "User [userId=" + userId + ", username=" + username + ", name=" + name + ", email=" + email + ", password=" + password + "]";
     }
 
 	
@@ -185,13 +185,19 @@ public class User {
 	}
 
 	public User(Integer userId, @NotNull String username, @NotNull String email, @NotNull String password,
-			@NotNull String fullName, byte[] avatar, List<Comment> comments, List<Like> likes, List<Post> posts) {
+			@NotNull String name, byte[] avatar, List<Comment> comments, List<Like> likes, List<Post> posts,
+			List<User> followers, List<User> following, @NotNull boolean isAdmin) {
 		this.userId = userId;
 		this.username = username;
 		this.email = email;
 		this.password = password;
+		this.name = name;
+		this.avatar = avatar;
 		this.comments = comments;
 		this.likes = likes;
 		this.posts = posts;
+		this.followers = followers;
+		this.following = following;
+		this.isAdmin = isAdmin;
 	}
 }

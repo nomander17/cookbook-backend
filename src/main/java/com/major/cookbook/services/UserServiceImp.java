@@ -17,7 +17,7 @@ public class UserServiceImp implements UserService {
 	//Retrieving admin details 
 	@Value("${admin.username}")
 	private String adminUsername;
-	@Value("${admin.fullName}")
+	@Value("${admin.name}")
 	private String adminFullName;
 	@Value("${admin.email}")
 	private String adminEmail;
@@ -65,7 +65,7 @@ public class UserServiceImp implements UserService {
 		if(userRepo.count()==0) {
 			User admin = new User();
             admin.setUsername(adminUsername);
-            admin.setFullName(adminFullName);
+            admin.setName(adminFullName);
             admin.setEmail(adminEmail);
             admin.setIsAdmin(true);
             admin.setPassword(adminPassword);

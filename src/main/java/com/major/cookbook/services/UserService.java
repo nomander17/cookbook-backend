@@ -30,4 +30,7 @@ public interface UserService {
 	public User getAdminUserId();
 
     public List<User> getAllUsers();
+
+	// Get user by a particular username
+    public Object getUserByUsername(String username);
 }

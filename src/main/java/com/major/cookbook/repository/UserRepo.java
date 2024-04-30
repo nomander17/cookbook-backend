@@ -9,5 +9,7 @@ public interface UserRepo extends JpaRepository<User, Integer> {
     
     //Used to find the User with isAdmin=true
 	public User findUserIdByIsAdminTrue();
+
+    public Optional<User> findByUsername(String username);
  
 }

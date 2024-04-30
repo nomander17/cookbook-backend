@@ -18,7 +18,7 @@ public class UserServiceImp implements UserService {
 	@Value("${admin.username}")
 	private String adminUsername;
 	@Value("${admin.name}")
-	private String adminFullName;
+	private String adminName;
 	@Value("${admin.email}")
 	private String adminEmail;
 	@Value("${admin.password}")
@@ -65,7 +65,7 @@ public class UserServiceImp implements UserService {
 		if(userRepo.count()==0) {
 			User admin = new User();
             admin.setUsername(adminUsername);
-            admin.setName(adminFullName);
+            admin.setName(adminName);
             admin.setEmail(adminEmail);
             admin.setIsAdmin(true);
             admin.setPassword(adminPassword);
@@ -85,5 +85,11 @@ public class UserServiceImp implements UserService {
 	@Override
 	public List<User> getAllUsers() {
 		return userRepo.findAll();
+	}
+
+	
+	@Override
+	public User getUserByUsername(String username) {
+		return userRepo.findByUsername(username).orElse(null);
 	}
 }

@@ -27,10 +27,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> postUserRegister(@RequestBody UserDTO userDTO) {
-        User exisitingUser = userService.getUserByEmail(userDTO.getEmail());
-        if (exisitingUser != null) {
+        if((userService.getUserByEmail(userDTO.getEmail()) != null)) {
             return ResponseEntity.badRequest().body("Email already registered.");
-        }else {
+        }
+        if((userService.getUserByUsername(userDTO.getUsername()) != null)) {
+            return ResponseEntity.badRequest().body("Username already used.");
+        }
+        else {
             User user = new User();
             user.setName(userDTO.getName());
             user.setUsername(userDTO.getUsername());

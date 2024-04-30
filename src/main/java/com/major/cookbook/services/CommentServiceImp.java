@@ -16,6 +16,7 @@ public class CommentServiceImp implements CommentService{
 	
 	@Autowired
 	private CommentRepo commentRepo;
+	
     @Autowired
 	private PostRepo postRepo;
 	

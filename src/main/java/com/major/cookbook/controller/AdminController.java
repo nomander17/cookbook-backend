@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -97,6 +99,29 @@ public class AdminController {
     @DeleteMapping("/likes/{likeId}")
     public ResponseEntity<Object> deleteLike(@PathVariable String likeId) {
         likeService.deleteLikeById(Integer.parseInt(likeId));
+        return ResponseEntity.ok().build();
+    }
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<Object> updateUser(@PathVariable String userId, @RequestBody User user) {
+        userService.updateUser(user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/posts/{postId}")
+    public ResponseEntity<Object> updatePost(@PathVariable String postId, @RequestBody Post post) {
+        postService.updatePost(post);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/comments/{commentId}")
+    public ResponseEntity<Object> updateComment(@PathVariable String commentId, @RequestBody Comment comment) {
+        commentService.updateComment(comment);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/likes/{likeId}")
+    public ResponseEntity<Object> updateLike(@PathVariable String likeId, @RequestBody Like like) {
+        likeService.updateLike(like);
         return ResponseEntity.ok().build();
     }
 }

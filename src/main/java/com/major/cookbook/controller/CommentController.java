@@ -38,7 +38,7 @@ public class CommentController {
 	@Autowired
 	private UserService userService;
 	
-	private static final Logger logger = LoggerFactory.getLogger(PostController.class);
+	private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
 	
 	// Returns a specified comment from a specific post
     @GetMapping("/{postId}/comments/{commentId}")

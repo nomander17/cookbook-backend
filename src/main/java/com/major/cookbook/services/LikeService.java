@@ -33,4 +33,6 @@ public interface LikeService {
     public List<Like> getAllLikes();
 
     public void deleteLikeById(int int1);
+
+    public void updateLike(Like like);
 }

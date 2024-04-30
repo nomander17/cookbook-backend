@@ -32,11 +32,12 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Email already registered.");
         }else {
             User user = new User();
-            user.setFullName(userDTO.getFullName());
+            user.setName(userDTO.getName());
             user.setUsername(userDTO.getUsername());
             user.setEmail(userDTO.getEmail());
             user.setPassword(userDTO.getPassword());
             user.setIsAdmin(false);
+            user.setName(userDTO.getName());
             User newUser = this.userService.addUser(user);
             return ResponseEntity.ok(newUser.toString());
         }

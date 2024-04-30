@@ -40,11 +40,11 @@ public class UserDTO {
 		this.password = password;
 	}
 
-	public String getFullName() {
+	public String getName() {
 		return name;
 	}
 
-	public void setFullName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 

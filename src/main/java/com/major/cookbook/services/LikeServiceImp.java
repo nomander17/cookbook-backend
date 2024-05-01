@@ -56,9 +56,10 @@ public class LikeServiceImp implements LikeService {
 	}
 
 	@Override
-	public void updateLike(Like like) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'updateLike'");
+	public Like updateLike(Like updatedLike) {
+		likeRepo.save(updatedLike);
+		return updatedLike;
+		//throw new UnsupportedOperationException("Unimplemented method 'updateLike'");
 	}
 
 	@Override

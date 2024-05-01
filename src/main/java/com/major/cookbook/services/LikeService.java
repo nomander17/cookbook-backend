@@ -24,6 +24,6 @@ public interface LikeService {
     public Like deleteLikeById(int int1);
 
     //Update like
-    public void updateLike(Like like);
+    public Like updateLike(Like like);
 
 }

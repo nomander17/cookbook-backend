@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -61,7 +62,7 @@ public class PostController {
             post.setUser(user);
             post.setText(postDTO.getText());
             post.setImage(postDTO.getImage());
-            post.setTime(postDTO.getTime());
+            post.setTime(LocalDateTime.now());
             Post createdPost = this.postService.createPost(post);
             return ResponseEntity.ok(createdPost);
         }

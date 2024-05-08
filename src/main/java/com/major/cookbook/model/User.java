@@ -42,7 +42,7 @@ public class User {
     private String name;
     
     @Lob
-    @Column(name = "avatar", columnDefinition = "BLOB")
+    @Column(name = "avatar", columnDefinition = "MEDIUMBLOB")
     private byte[] avatar;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

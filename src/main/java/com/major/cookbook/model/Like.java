@@ -2,6 +2,8 @@ package com.major.cookbook.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +21,7 @@ public class Like {
     @Column(name = "like_id")
     private Integer likeId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
@@ -31,6 +34,7 @@ public class Like {
     @JoinColumn(name = "user_id")
     private User user;
 
+    // Probably can remove this?
     @Column(name = "time")
     private LocalDateTime time;
 

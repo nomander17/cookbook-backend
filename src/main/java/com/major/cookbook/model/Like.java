@@ -2,7 +2,8 @@ package com.major.cookbook.model;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +22,7 @@ public class Like {
     @Column(name = "like_id")
     private Integer likeId;
 
-    @JsonIgnore
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
@@ -34,7 +35,6 @@ public class Like {
     @JoinColumn(name = "user_id")
     private User user;
 
-    // Probably can remove this?
     @Column(name = "time")
     private LocalDateTime time;
 
@@ -76,6 +76,12 @@ public class Like {
 
     public void setTime(LocalDateTime time) {
         this.time = time;
+    }
+
+    // This method will be called by Jackson to serialize postId
+    @JsonProperty("postId")
+    public Integer getPostId() {
+        return post != null ? post.getPostId() : null;
     }
 
     @Override

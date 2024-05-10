@@ -1,6 +1,7 @@
 package com.major.cookbook.controller;
 
 import com.major.cookbook.dto.PostDTO;
+import com.major.cookbook.dto.PublicUserDTO;
 import com.major.cookbook.model.Post;
 import com.major.cookbook.model.User;
 import com.major.cookbook.services.PostService;
@@ -35,6 +36,10 @@ public class PostController {
         if (post == null) {
             return ResponseEntity.notFound().build();
         } else {
+            // Convert User to UserDTO
+            PublicUserDTO publicUserDTO = convertToPublicUserDTO(post.getUser());
+            // Set the DTO in the post before returning
+            post.setPublicUserDTO(publicUserDTO);
             return ResponseEntity.ok(post);
         }
     }
@@ -46,6 +51,11 @@ public class PostController {
         if (posts.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
+            // Convert User to PublicUserDTO for each post
+            for (Post post : posts) {
+                PublicUserDTO publicUserDTO = convertToPublicUserDTO(post.getUser());
+                post.setPublicUserDTO(publicUserDTO);
+            }
             return ResponseEntity.ok(posts);
         }
     }
@@ -86,5 +96,15 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<Post> deletePost(@PathVariable String postId) {
         return ResponseEntity.ok(this.postService.deletePost(Integer.parseInt(postId)));
+    }
+
+    private PublicUserDTO convertToPublicUserDTO(User user) {
+        PublicUserDTO publicUserDTO = new PublicUserDTO();
+        publicUserDTO.setUserId(user.getUserId());
+        publicUserDTO.setUsername(user.getUsername());
+        publicUserDTO.setName(user.getName());
+        publicUserDTO.setAvatar(user.getAvatar());
+        // Set other fields if necessary
+        return publicUserDTO;
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,6 +28,7 @@ import com.major.cookbook.services.PostService;
 import com.major.cookbook.services.UserService;
 
 
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api")
@@ -46,10 +48,9 @@ public class LikeController {
 	
 	@Autowired
 	private LikeRepo likeRepo;
-	
-	private static final Logger logger = LoggerFactory.getLogger(LikeController.class);
-	
+		
 	//Add Like to a specific post ID by a specific user ID
+	// LIKE a POST
 	@PostMapping("/posts/{postId}/likes")
 	public ResponseEntity<Object> createPostLike(@RequestBody LikeDTO likeDTO) {
         User user = userService.getUserById(likeDTO.getUserId());
@@ -59,25 +60,25 @@ public class LikeController {
         }
         else {
         	if(likeRepo.alreadyLikedPost(likeDTO.getUserId(), likeDTO.getPostId())!=null) {
-        		return ResponseEntity.badRequest().body("User has already liked the post");
+        		return ResponseEntity.status(HttpStatus.CONFLICT).body("User has already liked the post");
         	}else {
 	        	Like like = new Like();
 	        	like.setUser(user);
 	        	like.setPost(post);
 	        	like.setComment(null);
-	        	like.setTime(likeDTO.getTime());
 	        	Like addPostLike = this.likeService.addPostLike(like);
 	            return ResponseEntity.ok(addPostLike);
         	}
         }
     }
 	//Add Like to a specific commentID ID by a specific user ID
+	// LIKE a COMMENT
 	@PostMapping("/posts/{postId}/comments/{commentId}/likes")
 	public ResponseEntity<Object> createCommentLike(@RequestBody LikeDTO likeDTO) {
         User user = userService.getUserById(likeDTO.getUserId());
         Comment comment = commentService.getCommentById(likeDTO.getPostId(), likeDTO.getCommentId());
         if(user == null || comment == null){
-            return ResponseEntity.badRequest().body("User or Post does not exist.");
+            return ResponseEntity.badRequest().body("User or Comment does not exist.");
         }
         else {
         	if(likeRepo.alreadyLikedComment(likeDTO.getUserId(), likeDTO.getCommentId())!=null) {
@@ -87,7 +88,6 @@ public class LikeController {
 	        	like.setUser(user);
 	        	like.setPost(null);
 	        	like.setComment(comment);
-	        	like.setTime(likeDTO.getTime());
 	        	Like addPostLike = this.likeService.addPostLike(like);
 	            return ResponseEntity.ok(addPostLike);
         	}

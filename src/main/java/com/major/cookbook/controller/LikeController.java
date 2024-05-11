@@ -75,10 +75,10 @@ public class LikeController {
 	// LIKE a COMMENT
 	@PostMapping("/posts/{postId}/comments/{commentId}/likes")
 	public ResponseEntity<Object> createCommentLike(@RequestBody LikeDTO likeDTO) {
-        User user = userService.getUserById(likeDTO.getUserId());
-        Comment comment = commentService.getCommentById(likeDTO.getPostId(), likeDTO.getCommentId());
+        Comment comment = commentService.getCommentByCommentId(likeDTO.getCommentId());
+		User user = userService.getUserById(likeDTO.getUserId());
         if(user == null || comment == null){
-            return ResponseEntity.badRequest().body("User or Comment does not exist.");
+            return ResponseEntity.badRequest().body("Comment does not exist.");
         }
         else {
         	if(likeRepo.alreadyLikedComment(likeDTO.getUserId(), likeDTO.getCommentId())!=null) {

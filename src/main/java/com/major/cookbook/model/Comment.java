@@ -11,12 +11,17 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.major.cookbook.dto.PublicUserDTO;
 
 @Entity
 @Table(name = "comment")
@@ -30,9 +35,14 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Transient
+    @JsonProperty("user") // json return name
+    private PublicUserDTO publicUserDTO;
 
     @Column(name = "time")
     private LocalDateTime time;
@@ -44,7 +54,7 @@ public class Comment {
     @Column(name = "image", columnDefinition = "BLOB")
     private byte[] image;
 
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
 
@@ -104,14 +114,23 @@ public class Comment {
         this.likes = likes;
     }
 
+    public PublicUserDTO getPublicUserDTO() {
+        return publicUserDTO;
+    }
+
+    public void setPublicUserDTO(PublicUserDTO publicUserDTO) {
+        this.publicUserDTO = publicUserDTO;
+    }
+
     public Comment() {
     }
 
-    public Comment(Integer commentId, Post post, User user, LocalDateTime time, String text, byte[] image,
-                   List<Like> likes) {
+    public Comment(Integer commentId, Post post, User user, PublicUserDTO publicUserDTO, LocalDateTime time,
+            String text, byte[] image, List<Like> likes) {
         this.commentId = commentId;
         this.post = post;
         this.user = user;
+        this.publicUserDTO = publicUserDTO;
         this.time = time;
         this.text = text;
         this.image = image;
@@ -120,7 +139,9 @@ public class Comment {
 
     @Override
     public String toString() {
-        return "Comment [commentId=" + commentId + ", post=" + post + ", user=" + user + ", time=" + time +
-                ", text=" + text + "]";
+        return "Comment [commentId=" + commentId + ", post=" + post + ", user=" + user + ", publicUserDTO="
+                + publicUserDTO + ", time=" + time + ", text=" + text + ", image=" + Arrays.toString(image) + ", likes="
+                + likes + "]";
     }
+    
 }

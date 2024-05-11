@@ -1,5 +1,6 @@
 package com.major.cookbook.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -18,36 +19,44 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.major.cookbook.dto.CommentDTO;
 import com.major.cookbook.model.Comment;
+import com.major.cookbook.model.Like;
 import com.major.cookbook.model.Post;
 import com.major.cookbook.model.User;
 import com.major.cookbook.services.CommentService;
 import com.major.cookbook.services.PostService;
 import com.major.cookbook.services.UserService;
+import com.major.cookbook.util.UserConversionUtil;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/posts")
 public class CommentController {
-	
-	@Autowired
-	private CommentService commentService;
-	
-	@Autowired
-	private PostService postService;
-	
-	@Autowired
-	private UserService userService;
-	
-	private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
-	
-	// Returns a specified comment from a specific post
+
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private PostService postService;
+
+    @Autowired
+    private UserService userService;
+
+    private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
+
+    // Returns a specified comment from a specific post
     @GetMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<Object> getComment(@PathVariable String postId, @PathVariable String commentId) {
-        Comment comment = this.commentService.getCommentById(Integer.parseInt(postId), Integer.parseInt(commentId));
+        Comment comment = this.commentService.getCommentByCommentId(Integer.parseInt(commentId));
         if (comment == null) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok(comment); 
+            comment.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(comment.getUser()));
+            comment.getPost().setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(comment.getPost().getUser()));
+            // for likes to the comment itself
+            for (Like like: comment.getLikes()) {
+                like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
+            }
+            return ResponseEntity.ok(comment);
         }
     }
 
@@ -58,6 +67,13 @@ public class CommentController {
         if (comments.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
+            for (Comment comment : comments) {
+                comment.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(comment.getUser()));
+                comment.getPost().setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(comment.getPost().getUser()));
+                for (Like like: comment.getLikes()) {
+                    like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
+                }
+            }
             return ResponseEntity.ok(comments);
         }
     }
@@ -67,16 +83,15 @@ public class CommentController {
     public ResponseEntity<Object> createComment(@RequestBody CommentDTO commentDTO) {
         User user = userService.getUserById(commentDTO.getUserId());
         Post post = postService.getPostById(commentDTO.getPostId());
-        if(user == null || post == null){
+        if (user == null || post == null) {
             return ResponseEntity.badRequest().body("User or Post does not exist.");
-        }
-        else {
+        } else {
             Comment comment = new Comment();
             comment.setUser(user);
             comment.setPost(post);
             comment.setText(commentDTO.getText());
             comment.setImage(commentDTO.getImage());
-            comment.setTime(commentDTO.getTime());
+            comment.setTime(LocalDateTime.now());
             Comment createdComment = this.commentService.createComment(comment);
             return ResponseEntity.ok(createdComment);
         }
@@ -84,11 +99,12 @@ public class CommentController {
 
     // Update a specified comment under a post
     @PutMapping("{postId}/comments/{commentId}")
-    public ResponseEntity<Object> updateComment(@PathVariable String postId, @PathVariable String commentId, @RequestBody Comment updatedComment) {
-    	Comment comment = this.commentService.getCommentById(Integer.parseInt(postId),Integer.parseInt(commentId));
+    public ResponseEntity<Object> updateComment(@PathVariable String postId, @PathVariable String commentId,
+            @RequestBody Comment updatedComment) {
+        Comment comment = this.commentService.getCommentById(Integer.parseInt(postId), Integer.parseInt(commentId));
         logger.debug("CommentId : {}", commentId);
         logger.debug("Comment: {}", comment);
-        if(comment == null) {
+        if (comment == null) {
             logger.warn("CommentId {} not found", commentId);
             return ResponseEntity.notFound().build();
         } else {
@@ -99,6 +115,7 @@ public class CommentController {
     // Delete a specified comment
     @DeleteMapping("{postId}/comments/{commentId}")
     public ResponseEntity<Comment> deleteComment(@PathVariable String postId, @PathVariable String commentId) {
-    	return ResponseEntity.ok(this.commentService.deleteCommentByPostAndId(Integer.parseInt(postId), Integer.parseInt(commentId)));
+        return ResponseEntity.ok(
+                this.commentService.deleteCommentByPostAndId(Integer.parseInt(postId), Integer.parseInt(commentId)));
     }
 }

@@ -2,10 +2,11 @@ package com.major.cookbook.services;
 
 import java.util.List;
 
-import com.major.cookbook.model.User;
-import com.major.cookbook.dto.UserDTO;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
+import com.major.cookbook.model.User;
+
+public interface UserService extends UserDetailsService{
 	// Add a user
 	public User addUser(User user);
 

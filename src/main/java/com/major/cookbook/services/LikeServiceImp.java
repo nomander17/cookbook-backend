@@ -1,5 +1,6 @@
 package com.major.cookbook.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,14 +53,12 @@ public class LikeServiceImp implements LikeService {
 			return likeToDelete;
 		}
 		return null;
-		//throw new UnsupportedOperationException("Unimplemented method 'deleteLikeById'");
 	}
 
 	@Override
 	public Like updateLike(Like updatedLike) {
 		likeRepo.save(updatedLike);
 		return updatedLike;
-		//throw new UnsupportedOperationException("Unimplemented method 'updateLike'");
 	}
 
 	@Override
@@ -71,7 +70,12 @@ public class LikeServiceImp implements LikeService {
 	@Override
 	public List<Like> getLikesByCommentId(int commentId) {
 		Optional<Comment> comment = commentRepo.findById(commentId);
-		return likeRepo.findByComment(comment);
+		if (comment.isPresent()) {
+			return likeRepo.findByComment(comment);
+		} else {
+			return new ArrayList<>();
+		}
+		// return likeRepo.findByComment(comment);
 	}
 	 
 }

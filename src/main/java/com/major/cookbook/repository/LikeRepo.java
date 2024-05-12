@@ -23,9 +23,10 @@ public interface LikeRepo extends JpaRepository<Like, Integer>{
 	public Like alreadyLikedComment(@Param("userId")int userId, @Param("commentId")int commentId);
 	/*public Like findByUserIdAndCommentId(int userId, int commentId);*/
 	
-	//To get all likes from posts
+	//To get all likes from post
 	public List<Like> findByPost(Optional<Post> post);
-	
-	//To get all likes from Comment
+
+	// To get all likes for a comment
 	public List<Like> findByComment(Optional<Comment> comment);
+
 }

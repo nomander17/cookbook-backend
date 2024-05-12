@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.major.cookbook.dto.PublicUserDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,6 +20,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "post")
@@ -26,9 +30,14 @@ public class Post {
     @Column(name = "post_id")
     private Integer postId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Transient
+    @JsonProperty("user") // json return name
+    private PublicUserDTO publicUserDTO;
 
     @Column(name = "time")
     private LocalDateTime time;
@@ -40,7 +49,8 @@ public class Post {
     @Column(name = "image", columnDefinition = "MEDIUMBLOB")
     private byte[] image;
     
-    @JsonIgnore
+    // @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
 
@@ -62,6 +72,14 @@ public class Post {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public PublicUserDTO getPublicUserDTO() {
+        return publicUserDTO;
+    }
+
+    public void setPublicUserDTO(PublicUserDTO publicUserDTO) {
+        this.publicUserDTO = publicUserDTO;
     }
 
     public LocalDateTime getTime() {

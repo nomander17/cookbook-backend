@@ -3,7 +3,7 @@ package com.major.cookbook.services;
 import java.util.List;
 
 import com.major.cookbook.model.Comment;
-import com.major.cookbook.model.Post;
+import com.major.cookbook.model.Like;
 
 public interface CommentService {
 
@@ -27,4 +27,7 @@ public interface CommentService {
 
 	public List<Comment> getAllComments();
 
+	public List<Like> getLikesByCommentId(int commentId);
+
+	public Comment getCommentByCommentId(int commentId);
 }

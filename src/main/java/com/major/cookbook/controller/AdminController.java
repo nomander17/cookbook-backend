@@ -8,6 +8,8 @@ import com.major.cookbook.services.CommentService;
 import com.major.cookbook.services.LikeService;
 import com.major.cookbook.services.PostService;
 import com.major.cookbook.services.UserService;
+import com.major.cookbook.util.UserConversionUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -54,6 +56,9 @@ public class AdminController {
         if (posts.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
+            for(Post post : posts) {
+                post.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(post.getUser()));
+            }
             return ResponseEntity.ok(posts);
         }
     }
@@ -64,6 +69,9 @@ public class AdminController {
         if (comments.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
+            for(Comment comment: comments) {
+                comment.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(comment.getUser()));
+            }
             return ResponseEntity.ok(comments);
         }
     }
@@ -74,6 +82,9 @@ public class AdminController {
         if (likes.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
+            for(Like like: likes) {
+                like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
+            }
             return ResponseEntity.ok(likes);
         }
     }
@@ -101,6 +112,7 @@ public class AdminController {
         likeService.deleteLikeById(Integer.parseInt(likeId));
         return ResponseEntity.ok().build();
     }
+
     @PutMapping("/users/{userId}")
     public ResponseEntity<Object> updateUser(@PathVariable String userId, @RequestBody User user) {
         userService.updateUser(user);

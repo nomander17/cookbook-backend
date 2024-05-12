@@ -5,10 +5,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.major.cookbook.repository.UserRepo;
-import com.major.cookbook.dto.UserDTO;
 import com.major.cookbook.model.User;
 
 @Service
@@ -95,5 +95,11 @@ public class UserServiceImp implements UserService {
 	@Override
 	public User getUserByUsername(String username) {
 		return userRepo.findByUsername(username).orElse(null);
+	}
+
+	@Override
+	public User loadUserByUsername(String username) throws UsernameNotFoundException {
+		return userRepo.findByEmail(username)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 	}
 }

@@ -82,7 +82,6 @@ public class AuthController {
             user.setName(userDTO.getName());
             User newUser = this.userService.addUser(user);
             return ResponseEntity.ok(newUser.toString());
-        }
-        
+        }        
     }
 }

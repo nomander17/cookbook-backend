@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -210,10 +211,21 @@ public class User implements UserDetails{
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(this.getRole());
+		return List.of(simpleGrantedAuthority);
 	}
 
 	
+	private String getRole() {
+		if(this.getIsAdmin()) {
+			System.out.println("ROLE_ADMIN");
+			return "ROLE_ADMIN";
+		}else
+			System.out.println("ROLE_USER");
+			return "ROLE_USER";
+	}
+
+
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;

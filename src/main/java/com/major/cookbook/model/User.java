@@ -218,10 +218,8 @@ public class User implements UserDetails{
 	
 	private String getRole() {
 		if(this.getIsAdmin()) {
-			System.out.println("ROLE_ADMIN");
 			return "ROLE_ADMIN";
 		}else
-			System.out.println("ROLE_USER");
 			return "ROLE_USER";
 	}
 

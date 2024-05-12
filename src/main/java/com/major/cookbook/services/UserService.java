@@ -3,6 +3,7 @@ package com.major.cookbook.services;
 import java.util.List;
 
 import com.major.cookbook.model.User;
+import com.major.cookbook.dto.UserDTO;
 
 public interface UserService {
 	// Add a user

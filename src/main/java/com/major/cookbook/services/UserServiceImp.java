@@ -5,14 +5,18 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.major.cookbook.repository.UserRepo;
+import com.major.cookbook.dto.UserDTO;
 import com.major.cookbook.model.User;
 
 @Service
 public class UserServiceImp implements UserService {
 	@Autowired
 	private UserRepo userRepo;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	//Retrieving admin details 
 	@Value("${admin.username}")
@@ -64,11 +68,11 @@ public class UserServiceImp implements UserService {
 	public User addAdmin() {
 		if(userRepo.count()==0) {
 			User admin = new User();
-            admin.setUsername(adminUsername);
+            admin.setUserName(adminUsername);
             admin.setName(adminName);
             admin.setEmail(adminEmail);
             admin.setIsAdmin(true);
-            admin.setPassword(adminPassword);
+            admin.setPassword(passwordEncoder.encode(adminPassword));
 			userRepo.save(admin);
 			return admin;
 		}

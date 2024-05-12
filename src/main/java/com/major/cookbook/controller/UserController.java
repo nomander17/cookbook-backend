@@ -79,7 +79,7 @@ public class UserController {
 	    	User user = new User();
 	        user.setUserId(userDTO.getUserId());
 	        user.setName(userDTO.getName());
-	        user.setUsername(userDTO.getUsername());
+	        user.setUserName(userDTO.getUserName());
 	        user.setEmail(userDTO.getEmail());
 	        user.setPassword(userDTO.getPassword());
 	        user.setAvatar(userDTO.getAvatar());

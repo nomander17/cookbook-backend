@@ -1,7 +1,11 @@
 package com.major.cookbook.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -19,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements UserDetails{
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,9 +62,11 @@ public class User {
     private List<Post> posts = new ArrayList<>();
     
     @ManyToMany
+    @JsonIgnore
     private List<User> followers = new ArrayList<>();
     
     @ManyToMany
+    @JsonIgnore
     private List<User> following = new ArrayList<>();
     
     @NotNull
@@ -133,11 +139,11 @@ public class User {
 		this.userId = userId;
 	}
 
-	public String getUsername() {
+	public String getUserName() {
 		return username;
 	}
 
-	public void setUsername(String username) {
+	public void setUserName(String username) {
 		this.username = username;
 	}
 
@@ -199,5 +205,47 @@ public class User {
 		this.followers = followers;
 		this.following = following;
 		this.isAdmin = isAdmin;
+	}
+
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return this.email;
 	}
 }

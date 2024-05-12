@@ -25,6 +25,7 @@ import com.major.cookbook.services.CommentService;
 import com.major.cookbook.services.LikeService;
 import com.major.cookbook.services.PostService;
 import com.major.cookbook.services.UserService;
+import com.major.cookbook.util.UserConversionUtil;
 
 
 
@@ -88,6 +89,7 @@ public class LikeController {
 	        	like.setUser(user);
 	        	like.setPost(null);
 	        	like.setComment(comment);
+				like.setTime(LocalDateTime.now());
 	        	Like addPostLike = this.likeService.addPostLike(like);
 	            return ResponseEntity.ok(addPostLike);
         	}
@@ -112,6 +114,9 @@ public class LikeController {
         if (likes.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
+			for (Like like: likes) {
+				like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
+			}
             return ResponseEntity.ok(likes);
         }
     }

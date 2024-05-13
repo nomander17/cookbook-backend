@@ -8,6 +8,7 @@ import lombok.ToString;
 public class JwtResponse {
 	private String jwtToken;
 	private String username;
+	private int userId;
 	public String getJwtToken() {
 		return jwtToken;
 	}
@@ -20,12 +21,18 @@ public class JwtResponse {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	public JwtResponse(String jwtToken, String username) {
-		super();
-		this.jwtToken = jwtToken;
-		this.username = username;
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	public JwtResponse(){
 		
+	}
+	public JwtResponse(String jwtToken, String username, int userId) {
+		this.jwtToken = jwtToken;
+		this.username = username;
+		this.userId = userId;
 	}
 }

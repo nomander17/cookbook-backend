@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.major.cookbook.dto.LikeDTO;
+import com.major.cookbook.dto.PublicUserDTO;
 import com.major.cookbook.model.Comment;
 import com.major.cookbook.model.Like;
 import com.major.cookbook.model.Post;
@@ -103,6 +104,10 @@ public class LikeController {
         if (likes.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
+			for (Like like: likes) {
+				PublicUserDTO publicUserDTO = UserConversionUtil.convertToPublicUserDTO(like.getUser());
+                like.setPublicUserDTO(publicUserDTO);
+			}
             return ResponseEntity.ok(likes);
         }
     }

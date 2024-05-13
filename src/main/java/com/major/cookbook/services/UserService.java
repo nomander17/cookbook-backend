@@ -34,5 +34,5 @@ public interface UserService extends UserDetailsService{
     public List<User> getAllUsers();
 
 	// Get user by a particular username
-    public Object getUserByUsername(String username);
+    public User getUserByUsername(String username);
 }

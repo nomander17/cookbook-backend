@@ -99,7 +99,7 @@ public class UserServiceImp implements UserService {
 
 	@Override
 	public User loadUserByUsername(String username) throws UsernameNotFoundException {
-		return userRepo.findByEmail(username)
+		return userRepo.findByUsername(username)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 	}
 }

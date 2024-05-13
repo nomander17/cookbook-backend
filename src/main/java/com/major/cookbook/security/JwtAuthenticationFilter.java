@@ -66,7 +66,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                 e.printStackTrace();
             }
         } else {
-            logger.info("Invalid Header Value !! ");
+            logger.debug("Invalid Header Value !! ");
         }
         //If username isn't null and user is not authenticated 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

@@ -48,8 +48,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> postUserLogin(@RequestBody JwtRequest request) {//Add try catch if user not found
-        this.doAuthenticate(request.getEmail(), request.getPassword());
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+        logger.info(request.toString());
+        this.doAuthenticate(request.getUsername(), request.getPassword());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
         String token = this.helper.generateToken(userDetails);        
         JwtResponse response = new JwtResponse(token,userDetails.getUsername());
         return new ResponseEntity<>(response, HttpStatus.OK);

@@ -2,6 +2,7 @@ package com.major.cookbook.controller;
 
 import com.major.cookbook.dto.PostDTO;
 import com.major.cookbook.dto.PublicUserDTO;
+import com.major.cookbook.model.Like;
 import com.major.cookbook.model.Post;
 import com.major.cookbook.model.User;
 import com.major.cookbook.services.PostService;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -41,6 +43,12 @@ public class PostController {
             PublicUserDTO publicUserDTO = UserConversionUtil.convertToPublicUserDTO(post.getUser());
             // Set the DTO in the post before returning
             post.setPublicUserDTO(publicUserDTO);
+            List<Like> likes = post.getLikes();
+            // List<Like> updatedLikes = new ArrayList<>();
+            for (Like like: likes) {
+                like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
+            }
+            post.setLikes(likes);
             return ResponseEntity.ok(post);
         }
     }

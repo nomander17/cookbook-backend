@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.major.cookbook.dto.UserDTO;
 import com.major.cookbook.model.User;
 import com.major.cookbook.services.UserService;
+import com.major.cookbook.util.UserConversionUtil;
+
 import java.util.List;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,7 +43,7 @@ public class UserController {
     		logger.warn("Admin info cannot be accessed");
     		return ResponseEntity.badRequest().body("Admin info cannot be accessed");
     	}else {
-    		return ResponseEntity.ok(user);
+    		return ResponseEntity.ok(UserConversionUtil.convertToPublicUserDTO(user));
     	}
     }
   }

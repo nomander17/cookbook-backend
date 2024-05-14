@@ -12,7 +12,10 @@ import com.major.cookbook.util.UserConversionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -45,7 +48,7 @@ public class PostController {
             post.setPublicUserDTO(publicUserDTO);
             List<Like> likes = post.getLikes();
             // List<Like> updatedLikes = new ArrayList<>();
-            for (Like like: likes) {
+            for (Like like : likes) {
                 like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
             }
             post.setLikes(likes);
@@ -71,12 +74,17 @@ public class PostController {
 
     // Create a new post
     @PostMapping("")
-    public ResponseEntity<Object> createPost(@RequestBody PostDTO postDTO) {
-        User user = userService.getUserById(postDTO.getUserId());
-        if(user == null){
+    public ResponseEntity<Object> createPost(@RequestBody PostDTO postDTO, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        // User user = userService.getUserById(postDTO.getUserId());
+        User user = userService.getUserByUsername(username);
+        if (user == null) {
             return ResponseEntity.badRequest().body("User does not exist.");
-        }
-        else {
+        } else if (!user.getUserId().equals(postDTO.getUserId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("User ID in the request does not match the authenticated user.");
+        } else {
             Post post = new Post();
             post.setUser(user);
             post.setText(postDTO.getText());

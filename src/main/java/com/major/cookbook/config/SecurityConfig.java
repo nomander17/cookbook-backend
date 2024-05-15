@@ -50,6 +50,8 @@ public class SecurityConfig{
                 auth -> auth
                     .requestMatchers("/api/auth/login").permitAll()
                     .requestMatchers("/api/auth/register").permitAll()
+                    .requestMatchers("/api/auth/reset-password").permitAll()
+                    .requestMatchers("/api/auth/verify-otp").permitAll()
                     .requestMatchers("/admin/api/**").hasRole("ADMIN")
                     .requestMatchers("/api/**").hasRole("USER")
                     .anyRequest().authenticated())

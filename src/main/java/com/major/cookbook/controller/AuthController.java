@@ -1,5 +1,8 @@
 package com.major.cookbook.controller;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +17,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.major.cookbook.dto.UserDTO;
 import com.major.cookbook.jwt.JwtRequest;
 import com.major.cookbook.jwt.JwtResponse;
 import com.major.cookbook.model.User;
 import com.major.cookbook.security.JwtHelper;
+import com.major.cookbook.services.ResetService;
 import com.major.cookbook.services.UserService;
 
 @RestController
@@ -43,6 +50,9 @@ public class AuthController {
 
     @Autowired
     private JwtHelper helper;
+    
+    @Autowired
+    private ResetService resetService;
 
     private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
@@ -87,5 +97,30 @@ public class AuthController {
             User newUser = this.userService.addUser(user);
             return ResponseEntity.ok(newUser.toString());
         }        
+    }
+	
+	@PostMapping("/reset-password")
+	public ResponseEntity<JwtResponse> sendOtp(@RequestParam String email){
+		if(userService.getUserByEmail(email)==null)
+			return null;
+		else {
+			String token = resetService.generateJwt(email);
+	        User user = userService.getUserByEmail(email);
+	        int userId = user.getUserId();   
+	        String username = user.getUsername();
+	        JwtResponse response = new JwtResponse(token,username, userId);
+	        return new ResponseEntity<>(response, HttpStatus.OK);
+			//return ResponseEntity.ok("OTP sent successfully");
+		}
+	}
+	
+	@PostMapping("/verify-otp")
+	public ResponseEntity<String> verifyOtp(@RequestHeader("Authorization") String token, @RequestParam String otp){
+		boolean isOtpValid = resetService.verifyOtp(token.substring(7), otp);
+        if (isOtpValid) {
+            return ResponseEntity.ok("OTP verified successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Invalid OTP. Please try again.");
+        }
     }
 }

@@ -89,4 +89,28 @@ public class JwtHelper {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+    
+    //Generating Token with OTP
+    public String generateTokenWithOtp(String username, String otp) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("otp", otp);
+        return doGenerateToken(claims, username);
+    }
+    
+    // Verify OTP from token
+    public boolean verifyOtpFromToken(String token, String otp) {
+        Claims claims = getAllClaimsFromToken(token);
+        if (claims != null) {
+            String tokenOtp = (String) claims.get("otp");
+            return tokenOtp.equals(otp); //&& tokenOtp != null
+        }
+        return false;
+    }    
+	public String extractOtpFromToken(String token) {
+        // Extract the OTP from the token in the Authorization header
+	        Claims claims = Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token).getBody();
+	        if (claims != null) 
+	            return claims.get("otp", String.class);
+	        return null;
+	}
 }

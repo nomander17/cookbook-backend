@@ -38,55 +38,59 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
     private AuthenticationManager manager;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtHelper helper;
-    
+
     @Autowired
     private ResetService resetService;
 
     private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> postUserLogin(@RequestBody JwtRequest request) {//Add try catch if user not found
+    public ResponseEntity<JwtResponse> postUserLogin(@RequestBody JwtRequest request) {
         logger.info(request.toString());
+        try {
+            this.doAuthenticate(request.getUsername(), request.getPassword());
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         this.doAuthenticate(request.getUsername(), request.getPassword());
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
         String username = request.getUsername();
         User user = userService.getUserByUsername(username);
         int userId = user.getUserId();
-        String token = this.helper.generateToken(userDetails);        
-        JwtResponse response = new JwtResponse(token,userDetails.getUsername(), userId);
+        String token = this.helper.generateToken(userDetails);
+        JwtResponse response = new JwtResponse(token, userDetails.getUsername(), userId);
         return new ResponseEntity<>(response, HttpStatus.OK);
-    } 
+    }
 
     private void doAuthenticate(String email, String password) {
-		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email,password);
-		try {
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, password);
+        try {
             manager.authenticate(authentication);
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(" Invalid Username or Password  !!");
+            throw new BadCredentialsException(" Invalid Username or Password.");
         }
-	}
+    }
 
-	@PostMapping("/register")
+    @PostMapping("/register")
     public ResponseEntity<String> postUserRegister(@RequestBody UserDTO userDTO) {
-        if((userService.getUserByEmail(userDTO.getEmail()) != null)) {
+        if ((userService.getUserByEmail(userDTO.getEmail()) != null)) {
             return ResponseEntity.badRequest().body("Email already registered.");
         }
-        if((userService.getUserByUsername(userDTO.getUserName()) != null)) {
+        if ((userService.getUserByUsername(userDTO.getUserName()) != null)) {
             return ResponseEntity.badRequest().body("Username already used.");
-        }
-        else {
+        } else {
             User user = new User();
             user.setName(userDTO.getName());
             user.setUserName(userDTO.getUserName());
@@ -96,27 +100,27 @@ public class AuthController {
             user.setName(userDTO.getName());
             User newUser = this.userService.addUser(user);
             return ResponseEntity.ok(newUser.toString());
-        }        
+        }
     }
-	
-	@PostMapping("/reset-password")
-	public ResponseEntity<JwtResponse> sendOtp(@RequestParam String email){
-		if(userService.getUserByEmail(email)==null)
-			return null;
-		else {
-			String token = resetService.generateJwt(email);
-	        User user = userService.getUserByEmail(email);
-	        int userId = user.getUserId();   
-	        String username = user.getUsername();
-	        JwtResponse response = new JwtResponse(token,username, userId);
-	        return new ResponseEntity<>(response, HttpStatus.OK);
-			//return ResponseEntity.ok("OTP sent successfully");
-		}
-	}
-	
-	@PostMapping("/verify-otp")
-	public ResponseEntity<String> verifyOtp(@RequestHeader("Authorization") String token, @RequestParam String otp){
-		boolean isOtpValid = resetService.verifyOtp(token.substring(7), otp);
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<JwtResponse> sendOtp(@RequestParam String email) {
+        if (userService.getUserByEmail(email) == null)
+            return null;
+        else {
+            String token = resetService.generateJwt(email);
+            User user = userService.getUserByEmail(email);
+            int userId = user.getUserId();
+            String username = user.getUsername();
+            JwtResponse response = new JwtResponse(token, username, userId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+            // return ResponseEntity.ok("OTP sent successfully");
+        }
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<String> verifyOtp(@RequestHeader("Authorization") String token, @RequestParam String otp) {
+        boolean isOtpValid = resetService.verifyOtp(token.substring(7), otp);
         if (isOtpValid) {
             return ResponseEntity.ok("OTP verified successfully");
         } else {

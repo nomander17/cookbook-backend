@@ -54,13 +54,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
             	//SecurityContextHolder.getContext().setAuthentication(jwtHelper.validateToken(token));
                 username = this.jwtHelper.getUsernameFromToken(token);
             } catch (IllegalArgumentException e) {
-                logger.info("Illegal Argument while fetching the username !!");
+                logger.info("Illegal Argument while fetching the username.");
                 e.printStackTrace();
             } catch (ExpiredJwtException e) {
-                logger.info("Given jwt token is expired !!");
+                logger.info("Authorization token has expired.");
                 e.printStackTrace();
             } catch (MalformedJwtException e) {
-                logger.info("Some changed has done in token !! Invalid Token");
+                logger.info("Invalid Token. Token was modified.");
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -80,7 +80,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
-                logger.info("Validation fails !!");
+                logger.info("Validation failed.");
             }
         }
         filterChain.doFilter(request, response);

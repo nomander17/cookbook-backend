@@ -48,12 +48,10 @@ public class SecurityConfig{
             }))
             .authorizeHttpRequests(
                 auth -> auth
-                    .requestMatchers("/api/auth/login").permitAll()
-                    .requestMatchers("/api/auth/register").permitAll()
-                    .requestMatchers("/api/auth/reset-password").permitAll()
-                    .requestMatchers("/api/auth/verify-otp").permitAll()
+                    .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers("/api/auth/is-admin").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers("/api/**").hasAnyRole("USER", "ADMIN")
                     .requestMatchers("/admin/api/**").hasRole("ADMIN")
-                    .requestMatchers("/api/**").hasRole("USER")
                     .anyRequest().authenticated())
             .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Stateless since not stored in server

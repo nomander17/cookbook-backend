@@ -1,5 +1,6 @@
 package com.major.cookbook.controller;
 
+import com.major.cookbook.dto.UserDTOForAdmin;
 import com.major.cookbook.model.Comment;
 import com.major.cookbook.model.Like;
 import com.major.cookbook.model.Post;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -46,7 +48,11 @@ public class AdminController {
         if (users.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.ok(users);
+            List<UserDTOForAdmin> userDTOs = new ArrayList<>();
+            for (User user: users) {
+                userDTOs.add(UserConversionUtil.convertToUserDTOForAdmin(user));
+            }
+            return ResponseEntity.ok(userDTOs);
         }
     }
 

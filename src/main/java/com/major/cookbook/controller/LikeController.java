@@ -68,6 +68,7 @@ public class LikeController {
 	        	like.setPost(post);
 	        	like.setComment(null);
 				like.setTime((LocalDateTime.now()));
+				like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
 	        	Like addPostLike = this.likeService.addPostLike(like);
 	            return ResponseEntity.ok(addPostLike);
         	}
@@ -91,6 +92,7 @@ public class LikeController {
 	        	like.setPost(null);
 	        	like.setComment(comment);
 				like.setTime(LocalDateTime.now());
+				like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
 	        	Like addPostLike = this.likeService.addPostLike(like);
 	            return ResponseEntity.ok(addPostLike);
         	}
@@ -129,12 +131,16 @@ public class LikeController {
 	//Delete a like for a post by like ID
 	@DeleteMapping("/posts/{postId}/likes/{likeId}")
 	public ResponseEntity<Object> deletePostLike(@PathVariable String likeId) {
-    	return ResponseEntity.ok(this.likeService.deleteLikeById(Integer.parseInt(likeId)));
+		Like like = this.likeService.deleteLikeById(Integer.parseInt(likeId));
+		like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
+    	return ResponseEntity.ok(like);
     }
 	
-	//Delete a like for a post by like ID
+	//Delete a like for a comment by like ID
 	@DeleteMapping("/posts/{postId}/comments/{commentId}/likes/{likeId}")
 	public ResponseEntity<Object> deleteCommentLike(@PathVariable String likeId) {
+		Like like = this.likeService.deleteLikeById(Integer.parseInt(likeId));
+		like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
     	return ResponseEntity.ok(this.likeService.deleteLikeById(Integer.parseInt(likeId)));
     }
 }

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,33 +29,42 @@ public class UserController {
 
   @Autowired
   private UserService userService;
- 
+
   private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
   // Returns a specified user
   @GetMapping("/{userId}")
-  public ResponseEntity<Object> getUser(@PathVariable String userId) {
+  public ResponseEntity<Object> getUser(@PathVariable String userId, Authentication authentication) {
     User user = this.userService.getUserById(Integer.parseInt(userId));
     if (user == null) {
       return ResponseEntity.notFound().build();
     } else {
-    	User admin = this.userService.getAdminUserId();
-    	int adminId = admin.getUserId();
-    	if(Integer.parseInt(userId)==adminId) {
-    		logger.warn("Admin info cannot be accessed");
-    		return ResponseEntity.badRequest().body("Admin info cannot be accessed");
-    	}else {
-    		return ResponseEntity.ok(UserConversionUtil.convertToPublicUserDTO(user));
-    	}
+      User admin = this.userService.getAdminUserId();
+      int adminId = admin.getUserId();
+      UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+      if (Integer.parseInt(userId) == adminId) {
+        // check if the authenticated user is the admin
+        if (userDetails.getUsername().equals(admin.getUsername())) {
+          // admin is requesting their own info, allow access
+          return ResponseEntity.ok(UserConversionUtil.convertToPublicUserDTO(user));
+        } else {
+          // non-admin user is trying to access admin info, deny access
+          logger.warn("Admin info cannot be accessed");
+          return ResponseEntity.badRequest().body("Admin info cannot be accessed");
+        }
+      } else {
+        // Non-admin user info can be accessed by anyone
+        return ResponseEntity.ok(UserConversionUtil.convertToPublicUserDTO(user));
+      }
     }
   }
 
   // Returns ALL registered users
   @GetMapping("")
   public ResponseEntity<Object> getUsers() {
-	User admin = this.userService.getAdminUserId();
-	int adminId = admin.getUserId();
-	List<User> users = this.userService.getUsersExceptUserId(adminId);
+    User admin = this.userService.getAdminUserId();
+    int adminId = admin.getUserId();
+    List<User> users = this.userService.getUsersExceptUserId(adminId);
     if (users.isEmpty()) {
       return ResponseEntity.noContent().build();
     } else {
@@ -71,24 +82,24 @@ public class UserController {
     if (userExist == null) {
       logger.warn("UserId {} not found", userId);
       return ResponseEntity.notFound().build();
-    }else {
-    	User admin = this.userService.getAdminUserId();
-    	int adminId = admin.getUserId();
-    	if(Integer.parseInt(userId)==adminId) {
-    		logger.warn("Admin cannot be updated");
-    		return ResponseEntity.badRequest().body("Admin cannot be updated");
-    	}else {
-	    	User user = new User();
-	        user.setUserId(userDTO.getUserId());
-	        user.setName(userDTO.getName());
-	        user.setUserName(userDTO.getUserName());
-	        user.setEmail(userDTO.getEmail());
-	        user.setPassword(userDTO.getPassword());
-	        user.setAvatar(userDTO.getAvatar());
-	        user.setIsAdmin(false);
-	        User updatedUser = this.userService.updateUser(user);
-	        return ResponseEntity.ok(updatedUser);
-    	}
+    } else {
+      User admin = this.userService.getAdminUserId();
+      int adminId = admin.getUserId();
+      if (Integer.parseInt(userId) == adminId) {
+        logger.warn("Admin cannot be updated");
+        return ResponseEntity.badRequest().body("Admin cannot be updated");
+      } else {
+        User user = new User();
+        user.setUserId(userDTO.getUserId());
+        user.setName(userDTO.getName());
+        user.setUserName(userDTO.getUserName());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+        user.setAvatar(userDTO.getAvatar());
+        user.setIsAdmin(false);
+        User updatedUser = this.userService.updateUser(user);
+        return ResponseEntity.ok(updatedUser);
+      }
     }
   }
 

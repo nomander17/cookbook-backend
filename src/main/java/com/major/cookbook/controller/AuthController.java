@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.major.cookbook.dto.EmailDTO;
 import com.major.cookbook.dto.UserDTO;
 import com.major.cookbook.jwt.JwtRequest;
 import com.major.cookbook.jwt.JwtResponse;
@@ -105,18 +106,23 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<JwtResponse> sendOtp(@RequestParam String email) {
+    @PostMapping("/generate-otp")
+    public ResponseEntity<Object> sendOtp(@RequestBody EmailDTO emailDTO) {
+        String email = emailDTO.toString();
+        logger.debug("/generate-otp email:", email);
         if (userService.getUserByEmail(email) == null)
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email isn't registered.");
         else {
-            String token = resetService.generateJwt(email);
-            User user = userService.getUserByEmail(email);
-            int userId = user.getUserId();
-            String username = user.getUsername();
-            JwtResponse response = new JwtResponse(token, username, userId);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-            // return ResponseEntity.ok("OTP sent successfully");
+            try {
+                String token = resetService.generateJwt(email);
+                User user = userService.getUserByEmail(email);
+                int userId = user.getUserId();
+                String username = user.getUsername();
+                JwtResponse response = new JwtResponse(token, username, userId);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error generating OTP. Please try again.");
+            }
         }
     }
 

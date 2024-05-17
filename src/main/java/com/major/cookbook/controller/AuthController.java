@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.major.cookbook.dto.EmailDTO;
+import com.major.cookbook.dto.OtpDTO;
+import com.major.cookbook.dto.ResetPasswordDTO;
 import com.major.cookbook.dto.UserDTO;
 import com.major.cookbook.jwt.JwtRequest;
 import com.major.cookbook.jwt.JwtResponse;
@@ -33,6 +36,8 @@ import com.major.cookbook.model.User;
 import com.major.cookbook.security.JwtHelper;
 import com.major.cookbook.services.ResetService;
 import com.major.cookbook.services.UserService;
+
+import io.jsonwebtoken.Jwts;
 
 @RestController
 @CrossOrigin
@@ -114,7 +119,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email isn't registered.");
         else {
             try {
-                String token = resetService.generateJwt(email);
+                String token = resetService.generateJwt(false, email); //this false represents that otp not verified
                 User user = userService.getUserByEmail(email);
                 int userId = user.getUserId();
                 String username = user.getUsername();
@@ -127,15 +132,41 @@ public class AuthController {
     }
 
     @PostMapping("/verify-otp")
-    public ResponseEntity<String> verifyOtp(@RequestHeader("Authorization") String token, @RequestParam String otp) {
+    public ResponseEntity<Object> verifyOtp(@RequestHeader("Authorization") String token, @RequestBody OtpDTO otpDTO) {
+    	String otp = otpDTO.toString();
         boolean isOtpValid = resetService.verifyOtp(token.substring(7), otp);
         if (isOtpValid) {
-            return ResponseEntity.ok("OTP verified successfully");
+        	System.out.println("Valid OTP");
+        	String username = Jwts.parserBuilder().setSigningKey(helper.getSecretKey()).build().parseClaimsJws(token.substring(7)).getBody().getSubject();
+        	String newToken = resetService.generateJwt(true, username);
+        	User user = userService.getUserByUsername(username);
+        	int userId = user.getUserId();
+        	JwtResponse response = new JwtResponse(newToken, username, userId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return ResponseEntity.badRequest().body("Invalid OTP. Please try again.");
         }
     }
-
+    
+    @PutMapping("/reset-password")
+    public ResponseEntity<Object> resetPassword(@RequestHeader("Authorization") String token, @RequestBody ResetPasswordDTO resetPasswordDTO){
+		String newPassword = resetPasswordDTO.toString();
+		try {
+			String verified = Jwts.parserBuilder().setSigningKey(helper.getSecretKey()).build().parseClaimsJws(token.substring(7)).getBody().get("verified", String.class);
+			if(verified.equals("yes")) {
+				String username = Jwts.parserBuilder().setSigningKey(helper.getSecretKey()).build().parseClaimsJws(token.substring(7)).getBody().getSubject();
+	        	User user = userService.getUserByUsername(username);
+	        	user.setPassword(passwordEncoder.encode(newPassword));
+	        	User updatedUser = this.userService.updateUser(user);
+	            return ResponseEntity.ok(updatedUser);
+			}
+		}catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not authorized for re-setting password");
+            }
+		return null;
+    	
+    }
+    
     // checking if the user as the admin role
     @GetMapping("/is-admin")
     public ResponseEntity<Boolean> isAdmin(Authentication authentication) {

@@ -22,17 +22,24 @@ public class ResetServiceImpl implements ResetService {
     private UserService userService;
 
 	@Override
-	public String generateJwt(String email) {
-		// Generate OTP logic (e.g., random 6-digit OTP)
-        String otp = OtpGeneration.generateOtp();
-        User user = userService.getUserByEmail(email);
-        String username = user.getUsername();
-        // Generate JWT token with OTP and email
-        String token = jwtHelper.generateTokenWithOtp(username, otp);
-
-        // Send OTP via email
-        sendEmail(email, otp, token);
-        return token;
+	public String generateJwt(boolean verified, String email) {
+		if(!verified) {
+			// Generate OTP logic (e.g., random 6-digit OTP)
+	        String otp = OtpGeneration.generateOtp();
+	        User user = userService.getUserByEmail(email);
+	        String username = user.getUsername();
+	        // Generate JWT token with OTP and email
+	        String token = jwtHelper.generateTokenWithOtp(username, otp);
+	
+	        // Send OTP via email
+	        sendEmail(email, otp, token);
+	        return token;
+		}
+		else {
+			String username=email;
+			String token = jwtHelper.generateTokenAfterOtp(username);
+			return token;
+		}        
 	}
 
 	@Override

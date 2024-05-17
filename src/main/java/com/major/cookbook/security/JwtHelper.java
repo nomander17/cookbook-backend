@@ -40,6 +40,9 @@ public class JwtHelper {
     	}
     }
     
+    public SecretKey getSecretKey() {
+    	return this.secret;
+    }
     //retrieve userId from jwt token
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -95,6 +98,13 @@ public class JwtHelper {
         Map<String, Object> claims = new HashMap<>();
         claims.put("otp", otp);
         return doGenerateToken(claims, username);
+    }
+    
+    //Generting Token after OTP verification
+    public String generateTokenAfterOtp(String username) {
+    	Map<String, Object> claims =  new HashMap<>();
+    	claims.put("verified", "yes");
+    	return doGenerateToken(claims, username);
     }
     
     // Verify OTP from token

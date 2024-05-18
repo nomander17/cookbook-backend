@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin
@@ -61,14 +60,36 @@ public class UserController {
     }
   }
 
+  //View User Profile
   @GetMapping("/{userId}/profile")
-  public ResponseEntity<Object> getMethodName(@PathVariable String userId, Authentication authentication) {
+  public ResponseEntity<Object> getUserProfile(@PathVariable String userId, Authentication authentication) {
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
     String authUsername = userDetails.getUsername();
     User user = userService.getUserById(Integer.parseInt(userId));
     String username = user.getUsername();
     if (authUsername.equals(username)) {
       return ResponseEntity.ok(user);
+    }
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to fetch user profile.");
+  }
+
+  //Edit User Profile
+  @PutMapping("/{userId}/profile")
+  public ResponseEntity<Object> editUserProfile(@PathVariable String userId,@RequestBody UserDTO userDTO, Authentication authentication) {
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    String authUsername = userDetails.getUsername();
+    User user = userService.getUserById(Integer.parseInt(userId));
+    String username = user.getUsername();
+    if (authUsername.equals(username)) {
+        User updatedUser = new User();
+        updatedUser.setUserId(userDTO.getUserId());
+        updatedUser.setName(userDTO.getName());
+        updatedUser.setUserName(userDTO.getUserName());
+        updatedUser.setEmail(userDTO.getEmail());
+        updatedUser.setPassword(userDTO.getPassword());
+        updatedUser.setAvatar(userDTO.getAvatar());
+        updatedUser.setIsAdmin(false);
+        return ResponseEntity.ok(this.userService.updateUser(user));
     }
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to fetch user profile.");
   }

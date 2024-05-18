@@ -4,6 +4,7 @@ public class UserDTOForAdmin {
     private Integer userId;
     private String username;
     private String email;
+    @SuppressWarnings("unused")
     private String password;
     private String name;
     private byte[] avatar;

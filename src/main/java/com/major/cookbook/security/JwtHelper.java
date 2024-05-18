@@ -8,11 +8,8 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import com.major.cookbook.services.UserService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -8,11 +8,8 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import com.major.cookbook.services.UserService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -23,9 +20,6 @@ import io.jsonwebtoken.security.Keys;
 public class JwtHelper {
 	//Validity time in ms (here hh*mm*ss) multiplied by 1000 in generateToken()
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
-    
-    @Autowired
-    private UserService userService;
     
     private String secretkey;
     private SecretKey secret;

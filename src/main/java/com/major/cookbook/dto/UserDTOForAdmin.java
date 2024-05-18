@@ -1,12 +1,5 @@
 package com.major.cookbook.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.major.cookbook.model.Comment;
-import com.major.cookbook.model.Like;
-import com.major.cookbook.model.Post;
-
 public class UserDTOForAdmin {
     private Integer userId;
     private String username;

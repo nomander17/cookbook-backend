@@ -2,18 +2,18 @@ package com.major.cookbook.dto;
 
 public class ResetPasswordDTO {
 	
-	private String resetPassword;
+	private String password;
 
-	public String getResetPassword() {
-		return resetPassword;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setResetPassword(String resetPassword) {
-		this.resetPassword = resetPassword;
+	public void setPassword(String resetPassword) {
+		this.password = resetPassword;
 	}
 
 	public ResetPasswordDTO(String resetPassword) {
-		this.resetPassword = resetPassword;
+		this.password = resetPassword;
 	}
 	 
 	public ResetPasswordDTO() {
@@ -21,6 +21,6 @@ public class ResetPasswordDTO {
 	}
 	
 	public String toString() {
-		return resetPassword;
+		return password;
 	}
 }

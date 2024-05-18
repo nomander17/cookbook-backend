@@ -1,8 +1,5 @@
 package com.major.cookbook.controller;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +15,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.major.cookbook.dto.EmailDTO;
 import com.major.cookbook.dto.OtpDTO;
+import com.major.cookbook.dto.PublicUserDTO;
 import com.major.cookbook.dto.ResetPasswordDTO;
 import com.major.cookbook.dto.UserDTO;
 import com.major.cookbook.jwt.JwtRequest;
@@ -36,6 +31,7 @@ import com.major.cookbook.model.User;
 import com.major.cookbook.security.JwtHelper;
 import com.major.cookbook.services.ResetService;
 import com.major.cookbook.services.UserService;
+import com.major.cookbook.util.UserConversionUtil;
 
 import io.jsonwebtoken.Jwts;
 
@@ -146,7 +142,7 @@ public class AuthController {
             JwtResponse response = new JwtResponse(newToken, username, userId);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
-            return ResponseEntity.badRequest().body("Invalid OTP. Please try again.");
+            return ResponseEntity.badRequest().body("Invalid OTP.");
         }
     }
 
@@ -163,7 +159,8 @@ public class AuthController {
                 User user = userService.getUserByUsername(username);
                 user.setPassword(passwordEncoder.encode(newPassword));
                 User updatedUser = this.userService.updateUser(user);
-                return ResponseEntity.ok(updatedUser);
+                PublicUserDTO publicUpdatedUser = UserConversionUtil.convertToPublicUserDTO(updatedUser);
+                return ResponseEntity.ok(publicUpdatedUser);
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not authorized for re-setting password" + e);

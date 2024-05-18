@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,9 @@ public class UserController {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -86,10 +90,10 @@ public class UserController {
         updatedUser.setName(userDTO.getName());
         updatedUser.setUserName(userDTO.getUserName());
         updatedUser.setEmail(userDTO.getEmail());
-        updatedUser.setPassword(userDTO.getPassword());
+        updatedUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         updatedUser.setAvatar(userDTO.getAvatar());
         updatedUser.setIsAdmin(false);
-        return ResponseEntity.ok(this.userService.updateUser(user));
+        return ResponseEntity.ok(this.userService.updateUser(updatedUser));
     }
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to fetch user profile.");
   }

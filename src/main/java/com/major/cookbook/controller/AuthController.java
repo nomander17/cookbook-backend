@@ -1,8 +1,5 @@
 package com.major.cookbook.controller;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +19,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.major.cookbook.dto.EmailDTO;
 import com.major.cookbook.dto.OtpDTO;
 import com.major.cookbook.dto.ResetPasswordDTO;

@@ -24,9 +24,6 @@ public class JwtHelper {
 	//Validity time in ms (here hh*mm*ss) multiplied by 1000 in generateToken()
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
     
-    @Autowired
-    private UserService userService;
-    
     private String secretkey;
     private SecretKey secret;
     

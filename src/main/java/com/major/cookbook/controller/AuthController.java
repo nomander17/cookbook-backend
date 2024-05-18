@@ -119,54 +119,59 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email isn't registered.");
         else {
             try {
-                String token = resetService.generateJwt(false, email); //this false represents that otp not verified
+                String token = resetService.generateJwt(false, email); // this false represents that otp not verified
                 User user = userService.getUserByEmail(email);
                 int userId = user.getUserId();
                 String username = user.getUsername();
                 JwtResponse response = new JwtResponse(token, username, userId);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error generating OTP. Please try again.");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Error generating OTP. Please try again.");
             }
         }
     }
 
     @PostMapping("/verify-otp")
     public ResponseEntity<Object> verifyOtp(@RequestHeader("Authorization") String token, @RequestBody OtpDTO otpDTO) {
-    	String otp = otpDTO.toString();
+        String otp = otpDTO.toString();
         boolean isOtpValid = resetService.verifyOtp(token.substring(7), otp);
         if (isOtpValid) {
-        	System.out.println("Valid OTP");
-        	String username = Jwts.parserBuilder().setSigningKey(helper.getSecretKey()).build().parseClaimsJws(token.substring(7)).getBody().getSubject();
-        	String newToken = resetService.generateJwt(true, username);
-        	User user = userService.getUserByUsername(username);
-        	int userId = user.getUserId();
-        	JwtResponse response = new JwtResponse(newToken, username, userId);
+            System.out.println("Valid OTP");
+            String username = Jwts.parserBuilder().setSigningKey(helper.getSecretKey()).build()
+                    .parseClaimsJws(token.substring(7)).getBody().getSubject();
+            String newToken = resetService.generateJwt(true, username);
+            User user = userService.getUserByUsername(username);
+            int userId = user.getUserId();
+            JwtResponse response = new JwtResponse(newToken, username, userId);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return ResponseEntity.badRequest().body("Invalid OTP. Please try again.");
         }
     }
-    
-    @PutMapping("/reset-password")
-    public ResponseEntity<Object> resetPassword(@RequestHeader("Authorization") String token, @RequestBody ResetPasswordDTO resetPasswordDTO){
-		String newPassword = resetPasswordDTO.toString();
-		try {
-			String verified = Jwts.parserBuilder().setSigningKey(helper.getSecretKey()).build().parseClaimsJws(token.substring(7)).getBody().get("verified", String.class);
-			if(verified.equals("yes")) {
-				String username = Jwts.parserBuilder().setSigningKey(helper.getSecretKey()).build().parseClaimsJws(token.substring(7)).getBody().getSubject();
-	        	User user = userService.getUserByUsername(username);
-	        	user.setPassword(passwordEncoder.encode(newPassword));
-	        	User updatedUser = this.userService.updateUser(user);
-	            return ResponseEntity.ok(updatedUser);
-			}
-		}catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not authorized for re-setting password");
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Object> resetPassword(@RequestHeader("Authorization") String token,
+            @RequestBody ResetPasswordDTO resetPasswordDTO) {
+        String newPassword = resetPasswordDTO.toString();
+        try {
+            String verified = Jwts.parserBuilder().setSigningKey(helper.getSecretKey()).build()
+                    .parseClaimsJws(token.substring(7)).getBody().get("verified", String.class);
+            if (verified.equals("yes")) {
+                String username = Jwts.parserBuilder().setSigningKey(helper.getSecretKey()).build()
+                        .parseClaimsJws(token.substring(7)).getBody().getSubject();
+                User user = userService.getUserByUsername(username);
+                user.setPassword(passwordEncoder.encode(newPassword));
+                User updatedUser = this.userService.updateUser(user);
+                return ResponseEntity.ok(updatedUser);
             }
-		return null;
-    	
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not authorized for re-setting password" + e);
+        }
+        return null;
+
     }
-    
+
     // checking if the user as the admin role
     @GetMapping("/is-admin")
     public ResponseEntity<Boolean> isAdmin(Authentication authentication) {

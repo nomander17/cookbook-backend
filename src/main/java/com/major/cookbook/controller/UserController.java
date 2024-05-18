@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin
@@ -57,6 +59,18 @@ public class UserController {
         return ResponseEntity.ok(UserConversionUtil.convertToPublicUserDTO(user));
       }
     }
+  }
+
+  @GetMapping("/{userId}/profile")
+  public ResponseEntity<Object> getMethodName(@PathVariable String userId, Authentication authentication) {
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    String authUsername = userDetails.getUsername();
+    User user = userService.getUserById(Integer.parseInt(userId));
+    String username = user.getUsername();
+    if (authUsername.equals(username)) {
+      return ResponseEntity.ok(user);
+    }
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to fetch user profile.");
   }
 
   // Returns ALL registered users

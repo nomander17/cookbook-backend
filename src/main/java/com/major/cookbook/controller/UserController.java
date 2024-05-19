@@ -2,6 +2,7 @@ package com.major.cookbook.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.major.cookbook.dto.UpdateUserProfileDTO;
 import com.major.cookbook.dto.UserDTO;
 import com.major.cookbook.model.User;
 import com.major.cookbook.services.UserService;
@@ -79,21 +80,18 @@ public class UserController {
 
   //Edit User Profile
   @PutMapping("/{userId}/profile")
-  public ResponseEntity<Object> editUserProfile(@PathVariable String userId,@RequestBody UserDTO userDTO, Authentication authentication) {
+  public ResponseEntity<Object> editUserProfile(@PathVariable String userId,@RequestBody UpdateUserProfileDTO updateUserProfileDTO, Authentication authentication) {
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
     String authUsername = userDetails.getUsername();
-    User user = userService.getUserById(Integer.parseInt(userId));
-    String username = user.getUsername();
+    User oldUser = userService.getUserById(Integer.parseInt(userId));
+    String username = oldUser.getUsername();
     if (authUsername.equals(username)) {
-        User updatedUser = new User();
-        updatedUser.setUserId(userDTO.getUserId());
-        updatedUser.setName(userDTO.getName());
-        updatedUser.setUserName(userDTO.getUserName());
-        updatedUser.setEmail(userDTO.getEmail());
-        updatedUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        updatedUser.setAvatar(userDTO.getAvatar());
-        updatedUser.setIsAdmin(false);
-        return ResponseEntity.ok(this.userService.updateUser(updatedUser));
+        oldUser.setName(updateUserProfileDTO.getName());
+        oldUser.setUserName(updateUserProfileDTO.getUsername());
+        oldUser.setEmail(updateUserProfileDTO.getEmail());
+        oldUser.setAvatar(updateUserProfileDTO.getAvatar());
+        // instead of returning a new user body, it should return a new auth token
+        return ResponseEntity.ok(this.userService.updateUser(oldUser));
     }
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to fetch user profile.");
   }

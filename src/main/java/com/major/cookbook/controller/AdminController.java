@@ -13,8 +13,8 @@ import com.major.cookbook.services.PostService;
 import com.major.cookbook.services.UserService;
 import com.major.cookbook.util.UserConversionUtil;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,7 +50,7 @@ public class AdminController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private Logger logger = LoggerFactory.getLogger(AdminController.class);
+    //private Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @GetMapping("/users")
     public ResponseEntity<Object> getUsers() {

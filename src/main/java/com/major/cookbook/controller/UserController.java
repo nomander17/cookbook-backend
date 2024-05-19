@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,9 +31,6 @@ public class UserController {
 
   @Autowired
   private UserService userService;
-
-  @Autowired
-  private PasswordEncoder passwordEncoder;
 
   private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -142,7 +138,14 @@ public class UserController {
 
   // Delete a specified user
   @DeleteMapping("/{userId}")
-  public ResponseEntity<User> deleteUser(@PathVariable String userId) {
-    return ResponseEntity.ok(this.userService.deleteUser(Integer.parseInt(userId)));
+  public ResponseEntity<Object> deleteUser(@PathVariable String userId, Authentication authentication) {
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    String authUsername = userDetails.getUsername();
+    User user = userService.getUserById(Integer.parseInt(userId));
+    String username = user.getUsername();
+    if (authUsername.equals(username)) {
+      return ResponseEntity.ok(this.userService.deleteUser(Integer.parseInt(userId)));
+    }
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to fetch user profile.");
   }
 }

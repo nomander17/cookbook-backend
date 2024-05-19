@@ -17,7 +17,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -62,36 +61,9 @@ public class User implements UserDetails{
     @JsonIgnore
     private List<Post> posts = new ArrayList<>();
     
-    @ManyToMany
-    @JsonIgnore
-    private List<User> followers = new ArrayList<>();
-    
-    @ManyToMany
-    @JsonIgnore
-    private List<User> following = new ArrayList<>();
-    
     @NotNull
     @Column(name = "is_admin", nullable = false)
     private boolean isAdmin=false;
-
-    public List<User> getFollowers() {
-		return followers;
-	}
-
-
-	public void setFollowers(List<User> followers) {
-		this.followers = followers;
-	}
-
-
-	public List<User> getFollowing() {
-		return following;
-	}
-
-
-	public void setFollowing(List<User> following) {
-		this.following = following;
-	}	
 
 
 	public boolean getIsAdmin() {
@@ -193,7 +165,7 @@ public class User implements UserDetails{
 
 	public User(Integer userId, @NotNull String username, @NotNull String email, @NotNull String password,
 			@NotNull String name, byte[] avatar, List<Comment> comments, List<Like> likes, List<Post> posts,
-			List<User> followers, List<User> following, @NotNull boolean isAdmin) {
+			@NotNull boolean isAdmin) {
 		this.userId = userId;
 		this.username = username;
 		this.email = email;
@@ -203,8 +175,6 @@ public class User implements UserDetails{
 		this.comments = comments;
 		this.likes = likes;
 		this.posts = posts;
-		this.followers = followers;
-		this.following = following;
 		this.isAdmin = isAdmin;
 	}
 

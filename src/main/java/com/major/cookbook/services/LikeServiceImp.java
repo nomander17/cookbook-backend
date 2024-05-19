@@ -77,5 +77,9 @@ public class LikeServiceImp implements LikeService {
 		}
 		// return likeRepo.findByComment(comment);
 	}
-	 
+
+	@Override
+	public Like getLikeById(int likeId) {
+		return likeRepo.findById(likeId).orElse(null);
+	}	 
 }

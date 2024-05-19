@@ -96,21 +96,42 @@ public class PostController {
 
     // Update a specified post
     @PutMapping("/{postId}")
-    public ResponseEntity<Object> updatePost(@PathVariable String postId, @RequestBody Post updatedPost) {
-        Post post = this.postService.getPostById(Integer.parseInt(postId));
-        logger.debug("PostId : {}", postId);
-        logger.debug("Post: {}", post);
-        if (post == null) {
-            logger.warn("PostId {} not found", postId);
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(this.postService.updatePost(updatedPost));
+    public ResponseEntity<Object> updatePost(@PathVariable String postId, @RequestBody Post updatedPost, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        User user = userService.getUserByUsername(username);
+        if(user == null){
+            return ResponseEntity.badRequest().body("User does not exist");
+        } else if (!user.getUserId().equals(updatedPost.getUser().getUserId())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("User ID doesn't correspond to authenticated user");
+        }else{
+            Post post = this.postService.getPostById(Integer.parseInt(postId));
+            logger.debug("PostId : {}", postId);
+            logger.debug("Post: {}", post);
+            if (post == null) {
+                logger.warn("PostId {} not found", postId);
+                return ResponseEntity.notFound().build();
+            } else {
+                return ResponseEntity.ok(this.postService.updatePost(updatedPost));
+            }
         }
     }
 
     // Delete a specified post
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Post> deletePost(@PathVariable String postId) {
-        return ResponseEntity.ok(this.postService.deletePost(Integer.parseInt(postId)));
+    public ResponseEntity<Object> deletePost(@PathVariable String postId, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        User user = userService.getUserByUsername(username);
+        Post post = postService.getPostById(Integer.parseInt(postId));
+        if(user == null){
+            return ResponseEntity.badRequest().body("User does not exist");
+        } else if (!user.getUserId().equals(post.getUser().getUserId())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("User ID doesn't correspond to authenticated user");
+        }else {
+            return ResponseEntity.ok(this.postService.deletePost(Integer.parseInt(postId)));
+        }
     }
 }

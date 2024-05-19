@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,50 +55,70 @@ public class LikeController {
 	//Add Like to a specific post ID by a specific user ID
 	// LIKE a POST
 	@PostMapping("/posts/{postId}/likes")
-	public ResponseEntity<Object> createPostLike(@RequestBody LikeDTO likeDTO) {
-        User user = userService.getUserById(likeDTO.getUserId());
-        Post post = postService.getPostById(likeDTO.getPostId());
-        if(user == null || post == null){
-            return ResponseEntity.badRequest().body("User or Post does not exist.");
-        }
-        else {
-        	if(likeRepo.alreadyLikedPost(likeDTO.getUserId(), likeDTO.getPostId())!=null) {
-        		return ResponseEntity.status(HttpStatus.CONFLICT).body("User has already liked the post");
-        	}else {
-	        	Like like = new Like();
-	        	like.setUser(user);
-	        	like.setPost(post);
-	        	like.setComment(null);
-				like.setTime((LocalDateTime.now()));
-				like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
-	        	Like addPostLike = this.likeService.addPostLike(like);
-	            return ResponseEntity.ok(addPostLike);
-        	}
-        }
+	public ResponseEntity<Object> createPostLike(@RequestBody LikeDTO likeDTO, Authentication authentication) {
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        User authenticatedUser = userService.getUserByUsername(username);
+        if (authenticatedUser == null){
+            return ResponseEntity.badRequest().body("User does not exist.");
+        } else if(!authenticatedUser.getUserId().equals(likeDTO.getUserId())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("User ID in the request does not match the authenticated user.");
+        }else{
+			User user = userService.getUserById(likeDTO.getUserId());
+			Post post = postService.getPostById(likeDTO.getPostId());
+			if(user == null || post == null){
+				return ResponseEntity.badRequest().body("User or Post does not exist.");
+			}
+			else {
+				if(likeRepo.alreadyLikedPost(likeDTO.getUserId(), likeDTO.getPostId())!=null) {
+					return ResponseEntity.status(HttpStatus.CONFLICT).body("User has already liked the post");
+				}else {
+					Like like = new Like();
+					like.setUser(user);
+					like.setPost(post);
+					like.setComment(null);
+					like.setTime((LocalDateTime.now()));
+					like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
+					Like addPostLike = this.likeService.addPostLike(like);
+					return ResponseEntity.ok(addPostLike);
+				}
+			}
+		}
     }
 	//Add Like to a specific commentID ID by a specific user ID
 	// LIKE a COMMENT
 	@PostMapping("/posts/{postId}/comments/{commentId}/likes")
-	public ResponseEntity<Object> createCommentLike(@RequestBody LikeDTO likeDTO) {
-        Comment comment = commentService.getCommentByCommentId(likeDTO.getCommentId());
-		User user = userService.getUserById(likeDTO.getUserId());
-        if(user == null || comment == null){
-            return ResponseEntity.badRequest().body("Comment does not exist.");
-        }
-        else {
-        	if(likeRepo.alreadyLikedComment(likeDTO.getUserId(), likeDTO.getCommentId())!=null) {
-        		return ResponseEntity.badRequest().body("User has already liked the comment");
-        	}else {
-	        	Like like = new Like();
-	        	like.setUser(user);
-	        	like.setPost(null);
-	        	like.setComment(comment);
-				like.setTime(LocalDateTime.now());
-				like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
-	        	Like addPostLike = this.likeService.addPostLike(like);
-	            return ResponseEntity.ok(addPostLike);
-        	}
-        }
+	public ResponseEntity<Object> createCommentLike(@RequestBody LikeDTO likeDTO, Authentication authentication) {
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        User authenticatedUser = userService.getUserByUsername(username);
+        if (authenticatedUser == null){
+            return ResponseEntity.badRequest().body("User does not exist.");
+        } else if(!authenticatedUser.getUserId().equals(likeDTO.getUserId())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("User ID in the request does not match the authenticated user.");
+        }else{
+			Comment comment = commentService.getCommentByCommentId(likeDTO.getCommentId());
+			User user = userService.getUserById(likeDTO.getUserId());
+			if(user == null || comment == null){
+				return ResponseEntity.badRequest().body("Comment does not exist.");
+			}
+			else {
+				if(likeRepo.alreadyLikedComment(likeDTO.getUserId(), likeDTO.getCommentId())!=null) {
+					return ResponseEntity.badRequest().body("User has already liked the comment");
+				}else {
+					Like like = new Like();
+					like.setUser(user);
+					like.setPost(null);
+					like.setComment(comment);
+					like.setTime(LocalDateTime.now());
+					like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
+					Like addPostLike = this.likeService.addPostLike(like);
+					return ResponseEntity.ok(addPostLike);
+				}
+			}
+		}
     }
 	
 	//GET all likes under a specific post ID
@@ -130,17 +152,39 @@ public class LikeController {
 	
 	//Delete a like for a post by like ID
 	@DeleteMapping("/posts/{postId}/likes/{likeId}")
-	public ResponseEntity<Object> deletePostLike(@PathVariable String likeId) {
-		Like like = this.likeService.deleteLikeById(Integer.parseInt(likeId));
-		like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
-    	return ResponseEntity.ok(like);
+	public ResponseEntity<Object> deletePostLike(@PathVariable String likeId, Authentication authentication) {
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        User user = userService.getUserByUsername(username);
+		Like like = likeService.getLikeById(Integer.parseInt(likeId));
+		if(user == null){
+            return ResponseEntity.badRequest().body("User does not exist");
+        } else if (!user.getUserId().equals(like.getUser().getUserId())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("User ID doesn't correspond to authenticated user");
+        } else {
+			Like deletedLike = this.likeService.deleteLikeById(Integer.parseInt(likeId));
+			deletedLike.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(deletedLike.getUser()));
+			return ResponseEntity.ok(deletedLike);
+		}
     }
 	
 	//Delete a like for a comment by like ID
 	@DeleteMapping("/posts/{postId}/comments/{commentId}/likes/{likeId}")
-	public ResponseEntity<Object> deleteCommentLike(@PathVariable String likeId) {
-		Like like = this.likeService.deleteLikeById(Integer.parseInt(likeId));
-		like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
-    	return ResponseEntity.ok(this.likeService.deleteLikeById(Integer.parseInt(likeId)));
+	public ResponseEntity<Object> deleteCommentLike(@PathVariable String likeId, Authentication authentication) {
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        User user = userService.getUserByUsername(username);
+		Like like = likeService.getLikeById(Integer.parseInt(likeId));
+		if(user == null){
+            return ResponseEntity.badRequest().body("User does not exist");
+        } else if (!user.getUserId().equals(like.getUser().getUserId())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("User ID doesn't correspond to authenticated user");
+        } else {
+			Like deletedLike = this.likeService.deleteLikeById(Integer.parseInt(likeId));
+			deletedLike.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
+			return ResponseEntity.ok(this.likeService.deleteLikeById(Integer.parseInt(likeId)));
+		}
     }
 }

@@ -3,6 +3,7 @@ package com.major.cookbook.services;
 import java.util.List;
 
 import com.major.cookbook.model.Like;
+import com.major.cookbook.model.Post;
 
 public interface LikeService {
 	//To Add new like to a Post
@@ -28,5 +29,8 @@ public interface LikeService {
 
     //GET like by ID
     public Like getLikeById(int likeId);
+
+    //GET all Post liked by an user
+    public List<Post> getPostsLikedByUser(int userId);
 
 }

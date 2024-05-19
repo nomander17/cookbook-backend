@@ -29,4 +29,8 @@ public interface LikeRepo extends JpaRepository<Like, Integer>{
 	// To get all likes for a comment
 	public List<Like> findByComment(Optional<Comment> comment);
 
+	// Get all posts liked by an user by ID
+	@Query("SELECT l.post FROM Like l WHERE l.user.id = :userId AND l.post IS NOT NULL")
+	public List<Post> findPostsLikedByUserId(@Param("userId") int userId);
+
 }

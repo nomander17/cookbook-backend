@@ -8,6 +8,7 @@ import com.major.cookbook.jwt.JwtResponse;
 import com.major.cookbook.model.Post;
 import com.major.cookbook.model.User;
 import com.major.cookbook.security.JwtHelper;
+import com.major.cookbook.services.LikeService;
 import com.major.cookbook.services.PostService;
 import com.major.cookbook.services.UserService;
 import com.major.cookbook.util.UserConversionUtil;
@@ -39,6 +40,9 @@ public class UserController {
 
   @Autowired
   private PostService postService;
+
+  @Autowired
+  private LikeService likeService;
 
   @Autowired
   private UserDetailsService userDetailsService;
@@ -93,6 +97,13 @@ public class UserController {
   public ResponseEntity<Object> getUserPosts(@PathVariable String userId){
     User user = userService.getUserById(Integer.parseInt(userId));
     List<Post> posts = postService.findPostByUser(user);
+    return ResponseEntity.ok(posts);
+  }
+
+  //GETs all posts liked by the user
+  @GetMapping("{userId}/liked-posts")
+  public ResponseEntity<Object> getLikedPosts(@PathVariable String userId){
+    List<Post> posts = likeService.getPostsLikedByUser(Integer.parseInt(userId));
     return ResponseEntity.ok(posts);
   }
 

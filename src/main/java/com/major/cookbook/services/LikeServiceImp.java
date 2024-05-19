@@ -81,5 +81,10 @@ public class LikeServiceImp implements LikeService {
 	@Override
 	public Like getLikeById(int likeId) {
 		return likeRepo.findById(likeId).orElse(null);
+	}
+
+	@Override
+	public List<Post> getPostsLikedByUser(int userId) {
+		return likeRepo.findPostsLikedByUserId(userId);
 	}	 
 }

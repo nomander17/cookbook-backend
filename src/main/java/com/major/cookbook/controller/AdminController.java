@@ -1,5 +1,7 @@
 package com.major.cookbook.controller;
 
+import com.major.cookbook.dto.AdminUpdateLikeDTO;
+import com.major.cookbook.dto.AdminUpdatePostDTO;
 import com.major.cookbook.dto.UserDTOForAdmin;
 import com.major.cookbook.model.Comment;
 import com.major.cookbook.model.Like;
@@ -11,6 +13,8 @@ import com.major.cookbook.services.PostService;
 import com.major.cookbook.services.UserService;
 import com.major.cookbook.util.UserConversionUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,6 +50,8 @@ public class AdminController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private Logger logger = LoggerFactory.getLogger(AdminController.class);
+
     @GetMapping("/users")
     public ResponseEntity<Object> getUsers() {
         List<User> users = userService.getAllUsers();
@@ -53,7 +59,7 @@ public class AdminController {
             return ResponseEntity.noContent().build();
         } else {
             List<UserDTOForAdmin> userDTOs = new ArrayList<>();
-            for (User user: users) {
+            for (User user : users) {
                 userDTOs.add(UserConversionUtil.convertToUserDTOForAdmin(user));
             }
             return ResponseEntity.ok(userDTOs);
@@ -66,7 +72,7 @@ public class AdminController {
         if (posts.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
-            for(Post post : posts) {
+            for (Post post : posts) {
                 post.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(post.getUser()));
             }
             return ResponseEntity.ok(posts);
@@ -79,7 +85,7 @@ public class AdminController {
         if (comments.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
-            for(Comment comment: comments) {
+            for (Comment comment : comments) {
                 comment.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(comment.getUser()));
             }
             return ResponseEntity.ok(comments);
@@ -92,7 +98,7 @@ public class AdminController {
         if (likes.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
-            for(Like like: likes) {
+            for (Like like : likes) {
                 like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
             }
             return ResponseEntity.ok(likes);
@@ -139,20 +145,44 @@ public class AdminController {
     }
 
     @PutMapping("/posts/{postId}")
-    public ResponseEntity<Object> updatePost(@PathVariable String postId, @RequestBody Post post) {
-        postService.updatePost(post);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Object> updatePost(@PathVariable String postId, @RequestBody AdminUpdatePostDTO adminUpdatePostDTO) {
+        try {
+            Post post = postService.getPostById(Integer.parseInt(postId));
+            post.setText(adminUpdatePostDTO.getText());
+            post.setTime(adminUpdatePostDTO.getTime());
+            post.setImage(adminUpdatePostDTO.getImage());
+            postService.updatePost(post);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.toString());
+        }
     }
 
     @PutMapping("/comments/{commentId}")
-    public ResponseEntity<Object> updateComment(@PathVariable String commentId, @RequestBody Comment comment) {
-        commentService.updateComment(comment);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Object> updateComment(@PathVariable String commentId, @RequestBody AdminUpdatePostDTO adminUpdateCommentDTO) {
+        try {
+            Comment comment = commentService.getCommentByCommentId(Integer.parseInt(commentId));
+            comment.setText(adminUpdateCommentDTO.getText());
+            comment.setTime(adminUpdateCommentDTO.getTime());
+            comment.setImage(adminUpdateCommentDTO.getImage());
+            commentService.updateComment(comment);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.toString());
+        }
     }
 
     @PutMapping("/likes/{likeId}")
-    public ResponseEntity<Object> updateLike(@PathVariable String likeId, @RequestBody Like like) {
-        likeService.updateLike(like);
+    public ResponseEntity<Object> updateLike(@PathVariable String likeId, @RequestBody AdminUpdateLikeDTO adminUpdateLikeDTO) {
+        try {
+            Like like = likeService.getLikeById(Integer.parseInt(likeId));
+            like.setTime(adminUpdateLikeDTO.getTime());
+            like.setComment(commentService.getCommentByCommentId(adminUpdateLikeDTO.getCommentId()));
+            like.setPost(postService.getPostById(adminUpdateLikeDTO.getPostId()));
+            likeService.updateLike(like);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.toString());
+        }
         return ResponseEntity.ok().build();
     }
 }

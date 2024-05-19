@@ -26,4 +26,7 @@ public interface LikeService {
     //Update like
     public Like updateLike(Like like);
 
+    //GET like by ID
+    public Like getLikeById(int likeId);
+
 }

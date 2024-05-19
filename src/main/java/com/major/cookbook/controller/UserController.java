@@ -90,6 +90,9 @@ public class UserController {
     String authUsername = userDetails.getUsername();
     User oldUser = userService.getUserById(Integer.parseInt(userId));
     String username = oldUser.getUsername();
+    if((userService.getUserByUsername(updateUserProfileDTO.getUsername()))!=null || (userService.getUserByEmail(updateUserProfileDTO.getEmail()))!=null){
+      return ResponseEntity.status(HttpStatus.CONFLICT).body("Username or Email already exists");
+    }
     if (authUsername.equals(username)) {
         oldUser.setName(updateUserProfileDTO.getName());
         oldUser.setUserName(updateUserProfileDTO.getUsername());
@@ -157,6 +160,9 @@ public class UserController {
     User user = userService.getUserById(Integer.parseInt(userId));
     String username = user.getUsername();
     if (authUsername.equals(username)) {
+      if (user.getIsAdmin()){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Admin profile cannot be deleted");
+      }
       return ResponseEntity.ok(this.userService.deleteUser(Integer.parseInt(userId)));
     }
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to fetch user profile.");

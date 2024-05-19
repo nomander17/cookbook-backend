@@ -21,6 +21,6 @@ public interface PostService {
     // Delete a particular post
     public Post deletePost(int postId);
 
-    // GETs all posts by a specific user by ID
+    // GETs all posts by a specific user
     public List<Post> findPostByUser(User user);
 }

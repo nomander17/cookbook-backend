@@ -13,6 +13,7 @@ import com.major.cookbook.util.UserConversionUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +42,9 @@ public class AdminController {
 
     @Autowired
     private LikeService likeService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/users")
     public ResponseEntity<Object> getUsers() {
@@ -121,6 +125,15 @@ public class AdminController {
 
     @PutMapping("/users/{userId}")
     public ResponseEntity<Object> updateUser(@PathVariable String userId, @RequestBody User user) {
+        User oldUser = userService.getUserById(Integer.parseInt(userId));
+        // if password was not changed, get the old one
+        if (user.getPassword() == null) {
+            user.setPassword(oldUser.getPassword());
+        } else {
+            // password was changed
+            // encypt and save
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         userService.updateUser(user);
         return ResponseEntity.ok().build();
     }

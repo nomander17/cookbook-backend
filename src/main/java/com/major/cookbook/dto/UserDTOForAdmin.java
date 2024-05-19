@@ -28,7 +28,7 @@ public class UserDTOForAdmin {
         this.email = email;
     }
     public String getPassword() {
-        return "[ENCYPTED]";
+        return null;
     }
     public void setPassword(String password) {
         this.password = password;

@@ -4,7 +4,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.major.cookbook.dto.UpdateUserProfileDTO;
 import com.major.cookbook.dto.UserDTO;
+import com.major.cookbook.jwt.JwtResponse;
 import com.major.cookbook.model.User;
+import com.major.cookbook.security.JwtHelper;
 import com.major.cookbook.services.UserService;
 import com.major.cookbook.util.UserConversionUtil;
 
@@ -17,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +34,12 @@ public class UserController {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private UserDetailsService userDetailsService;
+
+  @Autowired
+  private JwtHelper helper;
 
   private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -86,8 +95,12 @@ public class UserController {
         oldUser.setUserName(updateUserProfileDTO.getUsername());
         oldUser.setEmail(updateUserProfileDTO.getEmail());
         oldUser.setAvatar(updateUserProfileDTO.getAvatar());
+        User updatedUser = userService.updateUser(oldUser);
         // instead of returning a new user body, it should return a new auth token
-        return ResponseEntity.ok(this.userService.updateUser(oldUser));
+        UserDetails newUserDetails = this.userDetailsService.loadUserByUsername(updatedUser.getUsername());
+        String token = this.helper.generateToken(newUserDetails);
+        JwtResponse response = new JwtResponse(token, userDetails.getUsername(), Integer.parseInt(userId));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to fetch user profile.");
   }

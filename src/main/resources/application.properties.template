@@ -14,7 +14,7 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 spring.jpa.hibernate.ddl-auto=update
 
 # Logging
-logging.level.com.your.package=DEBUG
+logging.level.com.major.cookbook.*=DEBUG
 
 # Admin email
 admin.username=

@@ -1,6 +1,8 @@
 package com.major.cookbook.services;
 
 import com.major.cookbook.model.Post;
+import com.major.cookbook.model.User;
+
 import java.util.List;
 
 public interface PostService {
@@ -18,4 +20,7 @@ public interface PostService {
 
     // Delete a particular post
     public Post deletePost(int postId);
+
+    // GETs all posts by a specific user by ID
+    public List<Post> findPostByUser(User user);
 }

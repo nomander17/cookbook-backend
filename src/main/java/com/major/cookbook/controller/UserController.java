@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.major.cookbook.dto.UpdateUserProfileDTO;
 import com.major.cookbook.dto.UserDTO;
 import com.major.cookbook.jwt.JwtResponse;
+import com.major.cookbook.model.Post;
 import com.major.cookbook.model.User;
 import com.major.cookbook.security.JwtHelper;
+import com.major.cookbook.services.PostService;
 import com.major.cookbook.services.UserService;
 import com.major.cookbook.util.UserConversionUtil;
 
@@ -34,6 +36,9 @@ public class UserController {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private PostService postService;
 
   @Autowired
   private UserDetailsService userDetailsService;
@@ -81,6 +86,14 @@ public class UserController {
       return ResponseEntity.ok(user);
     }
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to fetch user profile.");
+  }
+
+  //GETs all posts by the user
+  @GetMapping("/{userId}/posts")
+  public ResponseEntity<Object> getUserPosts(@PathVariable String userId){
+    User user = userService.getUserById(Integer.parseInt(userId));
+    List<Post> posts = postService.findPostByUser(user);
+    return ResponseEntity.ok(posts);
   }
 
   //Edit User Profile

@@ -102,7 +102,7 @@ public class UserController {
         // instead of returning a new user body, it should return a new auth token
         UserDetails newUserDetails = this.userDetailsService.loadUserByUsername(updatedUser.getUsername());
         String token = this.helper.generateToken(newUserDetails);
-        JwtResponse response = new JwtResponse(token, userDetails.getUsername(), Integer.parseInt(userId));
+        JwtResponse response = new JwtResponse(token, newUserDetails.getUsername(), Integer.parseInt(userId));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to fetch user profile.");

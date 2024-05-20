@@ -97,6 +97,9 @@ public class UserController {
   public ResponseEntity<Object> getUserPosts(@PathVariable String userId){
     User user = userService.getUserById(Integer.parseInt(userId));
     List<Post> posts = postService.findPostByUser(user);
+    for (Post post: posts) {
+      post.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(post.getUser()));
+    }
     return ResponseEntity.ok(posts);
   }
 

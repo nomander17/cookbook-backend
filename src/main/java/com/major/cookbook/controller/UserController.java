@@ -114,7 +114,8 @@ public class UserController {
     String authUsername = userDetails.getUsername();
     User oldUser = userService.getUserById(Integer.parseInt(userId));
     String username = oldUser.getUsername();
-    if((userService.getUserByUsername(updateUserProfileDTO.getUsername()))!=null || (userService.getUserByEmail(updateUserProfileDTO.getEmail()))!=null){
+    String oldemail = oldUser.getEmail();
+    if(((!username.equals(updateUserProfileDTO.getUsername()))&&(userService.getUserByUsername(updateUserProfileDTO.getUsername()))!=null) || ((!oldemail.equals(updateUserProfileDTO.getEmail())) && (userService.getUserByEmail(updateUserProfileDTO.getEmail()))!=null)){
       return ResponseEntity.status(HttpStatus.CONFLICT).body("Username or Email already exists");
     }
     if (authUsername.equals(username)) {

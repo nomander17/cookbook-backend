@@ -11,4 +11,7 @@ public interface PostRepo extends JpaRepository <Post, Integer> {
 
     List<Post> findByUser(User user);
 
+    // Finds posts where text=%:search%
+    List<Post> findByTextLike(String search);
+
 }

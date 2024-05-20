@@ -45,4 +45,9 @@ public class PostServiceImp implements PostService {
     public List<Post> findPostByUser(User user) {
         return postRepo.findByUser(user);
     }
+
+    @Override
+    public List<Post> getSearchResults(String search) {
+        return postRepo.findByTextLike(search);
+    }
 }

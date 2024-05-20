@@ -2,6 +2,7 @@ package com.major.cookbook.controller;
 
 import com.major.cookbook.dto.PostDTO;
 import com.major.cookbook.dto.PublicUserDTO;
+import com.major.cookbook.dto.SearchDTO;
 import com.major.cookbook.model.Like;
 import com.major.cookbook.model.Post;
 import com.major.cookbook.model.User;
@@ -70,6 +71,15 @@ public class PostController {
             return ResponseEntity.ok(posts);
         }
     }
+
+    //GETs all the posts searched by the user
+    @GetMapping("/search")
+    public ResponseEntity<Object> searchPost(@RequestBody SearchDTO searchDTO) {
+        String search = searchDTO.toString();
+        search = "%"+search+"%";
+        List<Post> posts = postService.getSearchResults(search);
+        return ResponseEntity.ok(posts);
+    }   
 
     // Create a new post
     @PostMapping("")

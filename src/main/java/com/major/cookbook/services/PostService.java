@@ -23,4 +23,7 @@ public interface PostService {
 
     // GETs all posts by a specific user
     public List<Post> findPostByUser(User user);
+
+    // GET all posts containing the search keyword
+    public List<Post> getSearchResults(String search);
 }

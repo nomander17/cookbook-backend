@@ -2,18 +2,18 @@ package com.major.cookbook.dto;
 
 public class SearchDTO {
     
-    private String search;
+    private String query;
 
-    public String getSearch() {
-        return search;
+    public String getQuery() {
+        return query;
     }
 
-    public void setSearch(String search) {
-        this.search = search;
+    public void setQuery(String search) {
+        this.query = search;
     }
 
     public SearchDTO(String search) {
-        this.search = search;
+        this.query = search;
     }
     
     public SearchDTO(){
@@ -22,6 +22,6 @@ public class SearchDTO {
 
     @Override
     public String toString() {
-        return search;
+        return query;
     }    
 }

@@ -109,7 +109,7 @@ public class AuthController {
 
     @PostMapping("/generate-otp")
     public ResponseEntity<Object> sendOtp(@RequestBody EmailDTO emailDTO) {
-        String email = emailDTO.toString();
+        String email = emailDTO.getEmail();
         logger.debug("/generate-otp email:", email);
         if (userService.getUserByEmail(email) == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email isn't registered.");

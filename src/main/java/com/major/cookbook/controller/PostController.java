@@ -73,11 +73,14 @@ public class PostController {
     }
 
     //GETs all the posts searched by the user
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<Object> searchPost(@RequestBody SearchDTO searchDTO) {
-        String search = searchDTO.toString();
+        String search = searchDTO.getQuery();
         search = "%"+search+"%";
         List<Post> posts = postService.getSearchResults(search);
+        for (Post post: posts) {
+            post.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(post.getUser()));
+        }
         return ResponseEntity.ok(posts);
     }   
 

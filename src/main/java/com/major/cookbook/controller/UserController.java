@@ -107,6 +107,9 @@ public class UserController {
   @GetMapping("{userId}/liked-posts")
   public ResponseEntity<Object> getLikedPosts(@PathVariable String userId){
     List<Post> posts = likeService.getPostsLikedByUser(Integer.parseInt(userId));
+    for (Post post: posts) {
+      post.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(post.getUser()));
+    }
     return ResponseEntity.ok(posts);
   }
 

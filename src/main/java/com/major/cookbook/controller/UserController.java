@@ -3,7 +3,6 @@ package com.major.cookbook.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.major.cookbook.dto.UpdateUserProfileDTO;
-import com.major.cookbook.dto.UserDTO;
 import com.major.cookbook.jwt.JwtResponse;
 import com.major.cookbook.model.Post;
 import com.major.cookbook.model.User;
@@ -137,50 +136,6 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Insufficient permissions to fetch user profile.");
-  }
-
-  // Returns ALL registered users
-  @GetMapping("")
-  public ResponseEntity<Object> getUsers() {
-    User admin = this.userService.getAdminUserId();
-    int adminId = admin.getUserId();
-    List<User> users = this.userService.getUsersExceptUserId(adminId);
-    if (users.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    } else {
-      return ResponseEntity.ok(users);
-    }
-
-  }
-
-  // Update a specified user
-  @PutMapping("/{userId}")
-  public ResponseEntity<Object> updateUser(@PathVariable String userId, @RequestBody UserDTO userDTO) {
-    User userExist = this.userService.getUserById(Integer.parseInt(userId));
-    logger.debug("UserId : {}", userId);
-    logger.debug("User: {}", userExist);
-    if (userExist == null) {
-      logger.warn("UserId {} not found", userId);
-      return ResponseEntity.notFound().build();
-    } else {
-      User admin = this.userService.getAdminUserId();
-      int adminId = admin.getUserId();
-      if (Integer.parseInt(userId) == adminId) {
-        logger.warn("Admin cannot be updated");
-        return ResponseEntity.badRequest().body("Admin cannot be updated");
-      } else {
-        User user = new User();
-        user.setUserId(userDTO.getUserId());
-        user.setName(userDTO.getName());
-        user.setUserName(userDTO.getUserName());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-        user.setAvatar(userDTO.getAvatar());
-        user.setIsAdmin(false);
-        User updatedUser = this.userService.updateUser(user);
-        return ResponseEntity.ok(updatedUser);
-      }
-    }
   }
 
   // Delete a specified user

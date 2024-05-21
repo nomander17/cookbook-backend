@@ -2,9 +2,6 @@ package com.major.cookbook.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.major.cookbook.dto.CommentDTO;
 import com.major.cookbook.model.Comment;
 import com.major.cookbook.model.Like;
@@ -43,8 +39,6 @@ public class CommentController {
 
     @Autowired
     private UserService userService;
-
-    private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
 
     // Returns a specified comment from a specific post
     @GetMapping("/{postId}/comments/{commentId}")
@@ -72,10 +66,13 @@ public class CommentController {
         } else {
             for (Comment comment : comments) {
                 comment.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(comment.getUser()));
-                comment.getPost().setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(comment.getPost().getUser()));
-                for (Like like: comment.getLikes()) {
-                    like.setPublicUserDTO(UserConversionUtil.convertToPublicUserDTO(like.getUser()));
-                }
+                comment.getPost().setImage(null);
+                comment.getPost().setComments(null);
+                comment.getPost().setLikes(null);
+                comment.setLikes(null);
+                comment.setImage(null);
+                comment.setText(null);
+                comment.setTime(null);
             }
             return ResponseEntity.ok(comments);
         }
@@ -124,10 +121,7 @@ public class CommentController {
                 .body("User ID doesn't correspond to authenticated user");
         }else{
             Comment comment = this.commentService.getCommentById(Integer.parseInt(postId), Integer.parseInt(commentId));
-            logger.debug("CommentId : {}", commentId);
-            logger.debug("Comment: {}", comment);
             if (comment == null) {
-                logger.warn("CommentId {} not found", commentId);
                 return ResponseEntity.notFound().build();
             } else {
                 return ResponseEntity.ok(this.commentService.updateComment(updatedComment));

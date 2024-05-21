@@ -65,7 +65,6 @@ public class PostController {
                 post.setLikes(null);
                 post.setPublicUserDTO(null);
                 post.setUser(null);
-                post.setTime(null);
             }
             // returns only postId in a post object
             return ResponseEntity.ok(posts);

@@ -58,12 +58,14 @@ public class UserController {
     if (user == null) {
       return ResponseEntity.notFound().build();
     } else {
-      User admin = this.userService.getAdminUserId();
-      int adminId = admin.getUserId();
+      //User admin = this.userService.getAdminUserId();
+      //int adminId = admin.getUserId();
       UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-      if (Integer.parseInt(userId) == adminId) {
-        // check if the authenticated user is the admin
-        if (userDetails.getUsername().equals(admin.getUsername())) {
+      String username = userDetails.getUsername();
+      User authUser = this.userService.getUserByUsername(username);
+      if (user.getIsAdmin()) {
+        // check if user trying to access admin info
+        if (user.getUsername().equals(authUser.getUsername())) {
           // admin is requesting their own info, allow access
           return ResponseEntity.ok(UserConversionUtil.convertToPublicUserDTO(user));
         } else {
